@@ -184,6 +184,7 @@ void SYS_Initialize ( void* data )
 	GPIO_Initialize();
 
     CORETIMER_Initialize();
+    I2C1_Initialize();
 	UART2_Initialize();
 
 	SPI1_Initialize();
@@ -194,6 +195,8 @@ void SYS_Initialize ( void* data )
 
     EVIC_Initialize();
 
+	/* Enable global interrupts */
+    __builtin_enable_interrupts();
 
 
 }

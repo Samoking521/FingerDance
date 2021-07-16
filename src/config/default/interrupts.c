@@ -60,10 +60,16 @@
 // *****************************************************************************
 
 
+void I2C_1_InterruptHandler( void );
 
 
 
 /* All the handlers are defined here.  Each will call its PLIB-specific function. */
+void __ISR(_I2C_1_VECTOR, ipl1SOFT) I2C_1_Handler (void)
+{
+    I2C_1_InterruptHandler();
+}
+
 
 
 

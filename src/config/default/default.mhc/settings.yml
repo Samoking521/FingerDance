@@ -5,7 +5,7 @@ frameworkPath: ..\..\harmony3
 processor: PIC32MX270F256D
 projectName: FingerDance_PLIB
 settings:
-  PackageFilter: bsp;core;core_apps_pic32mx;csp;quick_docs;usb
+  PackageFilter: audio;bsp;core;core_apps_pic32mx;csp;quick_docs;usb
   FORCE_OPTIMIZATION: 'false'
   GENERATE_BACKUP: 'true'
   TRUSTZONE: 'false'

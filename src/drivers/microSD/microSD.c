@@ -3,10 +3,10 @@
 #include "../../config/default/peripheral/coretimer/plib_coretimer.h"
 #include "../../utilities/crc.h"
 #include "../spi/spi.h"
+#include "../../library/Fatfs/ff.h"
 #include "microSD.h"
 #include <stdio.h>
 #include <string.h>
-//#include "ff.h"
 
 /* Private macro -------------------------------------------------------------*/
 //#define SD_DEBUG
@@ -808,7 +808,7 @@ SD_Error SD_ReadMultiBlocks(uint8_t *readbuf, uint64_t ReadAddr, uint16_t BlockS
     {
         return (errorstatus);
     }
-    
+
 #ifdef SD_TIME_DEBUG
     printf("Recv response end: %d\n", CORETIMER_CounterGet());
 #endif
@@ -1436,106 +1436,30 @@ SD_Error CmdResp7Error(void)
     return (errorstatus);
 }
 
+uint8_t ReadBuffer[1024];
+
 void SD_Test(void)
 {
-    /*
-    FATFS fs; // FatFs??????
-    FIL fnew; // ????
-    FRESULT res_sd; // ??????
-    UINT fnum; // ????????
-    BYTE ReadBuffer[1024] = {0}; // ????
-    //??????
-    res_sd = f_mount(&fs, "0:", 1);*/
-    /*----------------------- ????? ---------------------------*/
-    /*
-    // ????????????????????
-    if (res_sd == FR_NO_FILESYSTEM)
-    {
-      printf(">> SD????????????????...\n");
-      // ???
-      res_sd = f_mkfs("0:", 0, 0);
+    //SD_Init(); 
+    FATFS fs;
+    FRESULT res_sd;
+    FIL file;
+    UINT fnum;
+    TCHAR fname[] = "0:SummerWind.wav";
 
-      if (res_sd == FR_OK)
-      {
-        printf(">> SD???????????.\n");
-        // ??????????
-        res_sd = f_mount(NULL, "0:", 1);
-        // ????
-        res_sd = f_mount(&fs, "0:", 1);
-      }
-      else
-      {
-        printf("!! ?????.\n");
-        while (1)
-          ;
-      }
-    }
-    else if (res_sd != FR_OK)
-    {
-      printf("!! SD??????????(%d)\n", res_sd);
-      printf("!! ?????SD???????.\n");
-      while (1)
-        ;
-    }
-    else
-    {
-      printf(">> ?????????????????\n");
-    }*/
-    /*----------------------- ?????????? -----------------------------*/
-    /*
-    // ????????????????
-    printf("\n****** ??????????... ******\n");
-    res_sd = f_open(&fnew, "0:FatFs Test.txt", FA_CREATE_ALWAYS | FA_WRITE);
+    f_mount(&fs, "0:", 1);
+    res_sd = f_open(&file, (TCHAR *) fname, FA_OPEN_EXISTING | FA_READ);
     if (res_sd == FR_OK)
     {
-      printf(">> ??/??FatFs Test.txt?????????????\n");
-      // ??????????????
-      res_sd = f_write(&fnew, WriteBuffer, sizeof(WriteBuffer), &fnum);
-      if (res_sd == FR_OK)
-      {
-        printf(">> ??????????????%d\n", fnum);
-        printf(">> ??????????\n%s\n", WriteBuffer);
-      }
-      else
-      {
-        printf("!! ??????: (%d)\n", res_sd);
-      }
-      // ?????????.
-      f_close(&fnew);
+        f_read(&file, ReadBuffer, 1024, &fnum);
+        for (int i = 0; i < 1024; i++)
+            printf("%02x ", ReadBuffer[i]);
+        printf("\n");
     }
     else
     {
-      printf("!! ??/???????\n");
-    }*/
-    /*------------------- ?????????? ------------------------------------*/
-    /*
-    printf("****** ??????????... ******\n");
-    res_sd = f_open(&fnew, "0:speech_dian.wav", FA_OPEN_EXISTING | FA_READ);
-    if (res_sd == FR_OK)
-    {
-        printf(">> ???????\n");
-        printf(">> ????: %ldKB\n", f_size(&fnew) / 1024);
-        res_sd = f_read(&fnew, ReadBuffer, sizeof (ReadBuffer), &fnum);
-        if (res_sd == FR_OK)
-        {
-            printf(">> ??????,??????: %d\n", fnum);
-            //printf(">> ??????????\n%s \n", ReadBuffer);
-            printf(">> ??????????\n");
-            for (int i = 0; i < 1024; i++)
-                printf("%02x ", ReadBuffer[i]);
-        }
-        else
-        {
-            printf("!! ??????(%d)\n", res_sd);
-        }
+        printf("Open file failure!\n");
     }
-    else
-    {
-        printf("!! ??????(%d)\n", res_sd);
-    }
-    // ?????????
-    f_close(&fnew);
-
-    // ?????????????????
-    f_mount(NULL, "0:", 1);*/
+    f_close(&file);
+    f_mount(NULL, "0:", 1);
 }

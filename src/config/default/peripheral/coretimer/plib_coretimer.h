@@ -51,7 +51,7 @@
 
 
 
-#define CORE_TIMER_COMPARE_VALUE    0x4e20
+#define CORE_TIMER_COMPARE_VALUE    0xd5550980L
 
 void CORETIMER_Initialize(void);
 void CORETIMER_DelayMs (uint32_t delay_ms);

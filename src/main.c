@@ -25,7 +25,9 @@
 #include <stddef.h>                     // Defines NULL
 #include <stdbool.h>                    // Defines true
 #include <stdlib.h>                     // Defines EXIT_FAILURE
-#include "definitions.h"                // SYS function prototypes
+#include "definitions.h"
+#include "library/Fatfs/ff.h"
+#include "drivers/OLED/OLED.h"
 
 
 // *****************************************************************************
@@ -33,11 +35,8 @@
 // Section: Main Entry Point
 // *****************************************************************************
 // *****************************************************************************
-#define TX_NUM_BYTES     1
-#define RX_NUM_BYTES     1
 
-uint8_t txBuffer[TX_NUM_BYTES];
-uint8_t rxBuffer[RX_NUM_BYTES];
+
 
 #define MY_BUFFER_SIZE 1024
 uint8_t myBuffer[MY_BUFFER_SIZE];
@@ -48,25 +47,8 @@ int main(void)
     SYS_Initialize(NULL);
     printf("\nInitialize finish!\n");
 
-    SD_Init();
-    /*
-    uint8_t tx[6] = {0x40, 0x00, 0x00, 0x00, 0x00, 0x95};
-    uint8_t rx[8];
+    OLED_Test();
 
-    SD_CS_Clear();
-    SPI1_WriteRead(&tx, 6, &rx, 8);
-    SD_CS_Set();
-
-    printf("tx: ");
-    for (int i = 0; i < 6; i++)
-        printf("%02x ", tx[i]);
-    printf("\n");
-
-    printf("rx: ");
-    for (int i = 0; i < 8; i++)
-        printf("%02x ", rx[i]);
-    printf("\n");
-    */
     while (true)
     {
         /* Maintain state machines of all polled MPLAB Harmony modules. */
