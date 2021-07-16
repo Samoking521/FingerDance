@@ -5,7 +5,7 @@
 #include "peripheral/coretimer/plib_coretimer.h"
 #include <stdio.h>
 
-#define OLED_DEBUG
+//#define OLED_DEBUG
 #define OLED_ADDRESS 0x3C
 
 static uint8_t cmdBuf[4] = {0};

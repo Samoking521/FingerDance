@@ -45,7 +45,7 @@ int main(void)
 {
     /* Initialize all modules */
     SYS_Initialize(NULL);
-    printf("\nInitialize finish!\n");
+    printf("Initialize finish!\n");
 
     OLED_Test();
 
