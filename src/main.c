@@ -28,6 +28,7 @@
 #include "definitions.h"
 #include "library/Fatfs/ff.h"
 #include "drivers/OLED/OLED.h"
+#include "application/music/music.h"
 
 
 // *****************************************************************************
@@ -36,18 +37,27 @@
 // *****************************************************************************
 // *****************************************************************************
 
-
-
-#define MY_BUFFER_SIZE 1024
-uint8_t myBuffer[MY_BUFFER_SIZE];
-
 int main(void)
 {
     /* Initialize all modules */
     SYS_Initialize(NULL);
     printf("Initialize finish!\n");
 
-    OLED_Test();
+    //OLED_Test();
+    music_init();
+    music_play();
+    /*
+    uint8_t buf[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
+    void *srcAddr = (uint8_t *) buf;
+    void *destAddr = (uint8_t*) &SPI2BUF;
+    size_t size = 10;
+
+    DMAC_ChannelTransfer(DMAC_CHANNEL_0,
+            srcAddr,
+            size,
+            destAddr,
+            1,
+            1);*/
 
     while (true)
     {

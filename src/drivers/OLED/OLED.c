@@ -305,15 +305,7 @@ void OLED_Test()
     OLED_Init();
     OLED_Fill(0x00);
     CORETIMER_DelayMs(10);
-    /*
-    SendCmd(0xB0); //page0-page1
-    SendCmd(0x02); //low column start address
-    SendCmd(0x10); //high column start address
-    uint8_t x;
-    for (x = 0; x < 128; x++)
-    {
-        SendData(0xFF);
-    }*/
+    
     OLED_FillArea(0, 128, 0, 0xFF);
     
     uint8_t num[] = "0";

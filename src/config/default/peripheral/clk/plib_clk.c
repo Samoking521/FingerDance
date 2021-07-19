@@ -88,6 +88,25 @@ void CLK_Initialize( void )
     /* Code for fuse settings can be found in "initialization.c" */
     
 
+    /* unlock system for clock configuration */
+    SYSKEY = 0x00000000;
+    SYSKEY = 0xAA996655;
+    SYSKEY = 0x556699AA;
+
+
+    /* Set up Reference Clock */
+    /* ROSEL =  SYSCLK */
+    /* RODIV = 1 */
+    REFOCON = 0x10000;
+    /* ROTRIM  = 321 */
+    REFOTRIM = 0xa0800000;
+    /* Enable Reference Oscillator (ON bit) */
+    REFOCONSET = 0x00008000;
+
+
+    /* Lock system since done with clock configuration */
+    SYSKEY = 0x33333333;
+
     /* Wait for PLL to be locked */
     while(!OSCCONbits.SLOCK);
 
@@ -96,6 +115,6 @@ void CLK_Initialize( void )
     PMD2 = 0x7;
     PMD3 = 0x1f001f;
     PMD4 = 0x1f;
-    PMD5 = 0x1020201;
+    PMD5 = 0x1000001;
     PMD6 = 0x10001;
 }

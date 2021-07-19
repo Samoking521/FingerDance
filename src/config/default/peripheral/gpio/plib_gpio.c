@@ -60,10 +60,10 @@ void GPIO_Initialize ( void )
     /* PORTA Initialization */
 
     /* PORTB Initialization */
-    ODCBSET = 0x10; /* Open Drain Enable */
+    ODCBSET = 0x1c; /* Open Drain Enable */
     LATB = 0x10; /* Initial Latch Value */
     TRISBCLR = 0x10; /* Direction Control */
-    ANSELBCLR = 0x6000; /* Digital Mode Enable */
+    ANSELBCLR = 0xe00c; /* Digital Mode Enable */
 
     /* PORTC Initialization */
     LATC = 0x3; /* Initial Latch Value */
@@ -83,7 +83,10 @@ void GPIO_Initialize ( void )
 
     /* PPS Output Remapping */
     RPB10R = 2;
+    RPA4R = 4;
     RPB13R = 3;
+    RPA2R = 7;
+    RPA3R = 4;
 
     /* Lock back the system after PPS configuration */
     CFGCONbits.IOLOCK = 1;

@@ -51,13 +51,14 @@
 #include <stdio.h>
 #include "peripheral/coretimer/plib_coretimer.h"
 #include "peripheral/i2c/master/plib_i2c1_master.h"
+#include "peripheral/i2c/master/plib_i2c2_master.h"
 #include "peripheral/uart/plib_uart2.h"
 #include "peripheral/clk/plib_clk.h"
 #include "peripheral/gpio/plib_gpio.h"
 #include "peripheral/evic/plib_evic.h"
+#include "peripheral/dmac/plib_dmac.h"
 #include "peripheral/spi/spi_master/plib_spi1_master.h"
-
-#include "drivers/microSD/microSD.h"
+#include "audio/peripheral/i2s/plib_i2s2.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
