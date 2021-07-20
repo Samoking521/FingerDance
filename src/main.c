@@ -28,7 +28,10 @@
 #include "definitions.h"
 #include "library/Fatfs/ff.h"
 #include "drivers/OLED/OLED.h"
+#include "drivers/ws2812b/ws2812b.h"
+#include "drivers/i2c/i2c_gpio.h"
 #include "application/music/music.h"
+
 
 
 // *****************************************************************************
@@ -46,25 +49,20 @@ int main(void)
     //OLED_Test();
     music_init();
     music_play();
-    /*
-    uint8_t buf[10] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9};
-    void *srcAddr = (uint8_t *) buf;
-    void *destAddr = (uint8_t*) &SPI2BUF;
-    size_t size = 10;
-
-    DMAC_ChannelTransfer(DMAC_CHANNEL_0,
-            srcAddr,
-            size,
-            destAddr,
-            1,
-            1);*/
+    //WS2812B_Init();
+    //WS2812B_Test();
+    //i2c2_CheckDevice(0x1A);
 
     while (true)
     {
         /* Maintain state machines of all polled MPLAB Harmony modules. */
         GPIO_PinSet(LED1_PIN);
+        //GPIO_PinSet(I2C2_SCL_PIN);
+        //GPIO_PinClear(I2C2_SDA_PIN);
         CORETIMER_DelayMs(500);
         GPIO_PinClear(LED1_PIN);
+        //GPIO_PinClear(I2C2_SCL_PIN);
+        //GPIO_PinSet(I2C2_SDA_PIN);
         CORETIMER_DelayMs(500);
     }
 

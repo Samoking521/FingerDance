@@ -98,8 +98,8 @@ void CLK_Initialize( void )
     /* ROSEL =  SYSCLK */
     /* RODIV = 1 */
     REFOCON = 0x10000;
-    /* ROTRIM  = 321 */
-    REFOTRIM = 0xa0800000;
+    /* ROTRIM  = 395 */
+    REFOTRIM = 0xc5800000;
     /* Enable Reference Oscillator (ON bit) */
     REFOCONSET = 0x00008000;
 
@@ -113,8 +113,8 @@ void CLK_Initialize( void )
     /* Peripheral Module Disable Configuration */
     PMD1 = 0x1101;
     PMD2 = 0x7;
-    PMD3 = 0x1f001f;
-    PMD4 = 0x1f;
-    PMD5 = 0x1000001;
+    PMD3 = 0x1e001f;
+    PMD4 = 0x1d;
+    PMD5 = 0x1020001;
     PMD6 = 0x10001;
 }

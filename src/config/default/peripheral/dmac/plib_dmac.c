@@ -226,8 +226,16 @@ void DMAC_Initialize(void)
     /* CHBCIE = 1, CHTAIE=1, CHERIE=1, CHSHIE= 1, CHDHIE= 0 */
     DCH0INT = 0x4b0000;
 
+    /* DMA channel 1 configuration */
+    /* CHPRI = 3, CHAEN= 0, CHCHN= 0, CHCHNS= 0x0, CHAED= 0 */
+    DCH1CON = 0x3;
+    /* CHSIRQ = 9, SIRQEN = 1 */
+    DCH1ECON = 0x910;
+    /* CHBCIE = 1, CHTAIE=1, CHERIE=1, CHSHIE= 0, CHDHIE= 0 */
+    DCH1INT = 0xb0000;
+
     /* Enable DMA channel interrupts */
-    IEC1SET = 0 | 0x10000000 ;
+    IEC1SET = 0 | 0x10000000 | 0x20000000 ;
 }
 
 void DMAC_ChannelCallbackRegister(DMAC_CHANNEL channel, const DMAC_CHANNEL_CALLBACK eventHandler, const uintptr_t contextHandle)
@@ -462,6 +470,66 @@ void DMA_0_InterruptHandler(void)
 
     /* Clear the interrupt flag and call event handler */
     IFS1CLR = 0x10000000;
+
+    if((chanObj->pEventCallBack != NULL) && (dmaEvent != DMAC_TRANSFER_EVENT_NONE))
+    {
+        chanObj->pEventCallBack(dmaEvent, chanObj->hClientArg);
+    }
+}
+void DMA_1_InterruptHandler(void)
+{
+    DMAC_CHANNEL_OBJECT *chanObj;
+    DMAC_TRANSFER_EVENT dmaEvent = DMAC_TRANSFER_EVENT_NONE;
+
+    /* Find out the channel object */
+    chanObj = (DMAC_CHANNEL_OBJECT *) &gDMAChannelObj[1];
+
+    /* Check whether the active DMA channel event has occurred */
+
+    if((DCH1INTbits.CHSHIF == true) || (DCH1INTbits.CHDHIF == true))/* irq due to half complete */
+    {
+        /* Do not clear the flag here, it should be cleared with block transfer complete flag*/
+
+        /* Update error and event */
+        chanObj->errorInfo = DMAC_ERROR_NONE;
+        dmaEvent = DMAC_TRANSFER_EVENT_HALF_COMPLETE;
+        /* Since transfer is only half done yet, do not make inUse flag false */
+    }
+    if(DCH1INTbits.CHTAIF == true) /* irq due to transfer abort */
+    {
+        /* Channel is by default disabled on Transfer Abortion */
+        /* Clear the Abort transfer complete flag */
+        DCH1INTCLR = _DCH1INT_CHTAIF_MASK;
+
+        /* Update error and event */
+        chanObj->errorInfo = DMAC_ERROR_NONE;
+        dmaEvent = DMAC_TRANSFER_EVENT_ERROR;
+        chanObj->inUse = false;
+    }
+    if(DCH1INTbits.CHBCIF == true) /* irq due to transfer complete */
+    {
+        /* Channel is by default disabled on completion of a block transfer */
+        /* Clear the Block transfer complete, half empty and half full interrupt flag */
+        DCH1INTCLR = _DCH1INT_CHBCIF_MASK | _DCH1INT_CHSHIF_MASK | _DCH1INT_CHDHIF_MASK;
+
+        /* Update error and event */
+        chanObj->errorInfo = DMAC_ERROR_NONE;
+        dmaEvent = DMAC_TRANSFER_EVENT_COMPLETE;
+        chanObj->inUse = false;
+    }
+    if(DCH1INTbits.CHERIF == true) /* irq due to address error */
+    {
+        /* Clear the address error flag */
+        DCH1INTCLR = _DCH1INT_CHERIF_MASK;
+
+        /* Update error and event */
+        chanObj->errorInfo = DMAC_ERROR_ADDRESS_ERROR;
+        dmaEvent = DMAC_TRANSFER_EVENT_ERROR;
+        chanObj->inUse = false;
+    }
+
+    /* Clear the interrupt flag and call event handler */
+    IFS1CLR = 0x20000000;
 
     if((chanObj->pEventCallBack != NULL) && (dmaEvent != DMAC_TRANSFER_EVENT_NONE))
     {

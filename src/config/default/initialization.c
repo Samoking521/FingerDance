@@ -185,10 +185,13 @@ void SYS_Initialize ( void* data )
 
     CORETIMER_Initialize();
     I2C1_Initialize();
-    I2C2_Initialize();
 	UART2_Initialize();
 
+    TMR2_Initialize();
+
     DMAC_Initialize();
+    OCMP1_Initialize();
+
 	SPI1_Initialize();
 
 	I2S2_Initialize();

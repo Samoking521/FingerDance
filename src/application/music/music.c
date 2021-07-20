@@ -61,7 +61,7 @@ uint8_t music_play(void)
             music_buffer_fill(i2sBuf[0], I2S_TX_DMA_BUFSIZE, wavCtrl.bps);
             music_buffer_fill(i2sBuf[1], I2S_TX_DMA_BUFSIZE, wavCtrl.bps);
 
-            I2S_Start();
+            music_start();
 
             while (1)
             {
@@ -95,6 +95,26 @@ uint8_t music_play(void)
     else
         res = 0XFF;
     return res;
+}
+
+/**
+ * @brief  start play music
+ * @param  None
+ * @retval None
+ */
+void music_start(void)
+{
+    I2S_Start();
+}
+
+/**
+ * @brief  stop play music
+ * @param  None
+ * @retval None
+ */
+void music_stop(void)
+{
+    I2S_Stop();
 }
 
 /**

@@ -62,6 +62,24 @@
 // *****************************************************************************
 
 
+/*** Macros for I2C2_SDA pin ***/
+#define I2C2_SDA_Set()               (LATBSET = (1<<2))
+#define I2C2_SDA_Clear()             (LATBCLR = (1<<2))
+#define I2C2_SDA_Toggle()            (LATBINV= (1<<2))
+#define I2C2_SDA_OutputEnable()      (TRISBCLR = (1<<2))
+#define I2C2_SDA_InputEnable()       (TRISBSET = (1<<2))
+#define I2C2_SDA_Get()               ((PORTB >> 2) & 0x1)
+#define I2C2_SDA_PIN                  GPIO_PIN_RB2
+
+/*** Macros for I2C2_SCL pin ***/
+#define I2C2_SCL_Set()               (LATBSET = (1<<3))
+#define I2C2_SCL_Clear()             (LATBCLR = (1<<3))
+#define I2C2_SCL_Toggle()            (LATBINV= (1<<3))
+#define I2C2_SCL_OutputEnable()      (TRISBCLR = (1<<3))
+#define I2C2_SCL_InputEnable()       (TRISBSET = (1<<3))
+#define I2C2_SCL_Get()               ((PORTB >> 3) & 0x1)
+#define I2C2_SCL_PIN                  GPIO_PIN_RB3
+
 /*** Macros for LED1 pin ***/
 #define LED1_Set()               (LATCSET = (1<<0))
 #define LED1_Clear()             (LATCCLR = (1<<0))
@@ -88,6 +106,10 @@
 #define SD_CS_InputEnable()       (TRISBSET = (1<<4))
 #define SD_CS_Get()               ((PORTB >> 4) & 0x1)
 #define SD_CS_PIN                  GPIO_PIN_RB4
+
+/*** Macros for DIN pin ***/
+#define DIN_Get()               ((PORTB >> 7) & 0x1)
+#define DIN_PIN                  GPIO_PIN_RB7
 
 
 // *****************************************************************************

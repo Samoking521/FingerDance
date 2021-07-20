@@ -60,26 +60,32 @@
 // *****************************************************************************
 
 
+void TIMER_2_InterruptHandler( void );
 void I2C_1_InterruptHandler( void );
-void I2C_2_InterruptHandler( void );
 void DMA_0_InterruptHandler( void );
+void DMA_1_InterruptHandler( void );
 
 
 
 /* All the handlers are defined here.  Each will call its PLIB-specific function. */
+void __ISR(_TIMER_2_VECTOR, ipl1SOFT) TIMER_2_Handler (void)
+{
+    TIMER_2_InterruptHandler();
+}
+
 void __ISR(_I2C_1_VECTOR, ipl1SOFT) I2C_1_Handler (void)
 {
     I2C_1_InterruptHandler();
 }
 
-void __ISR(_I2C_2_VECTOR, ipl1SOFT) I2C_2_Handler (void)
-{
-    I2C_2_InterruptHandler();
-}
-
 void __ISR(_DMA_0_VECTOR, ipl1SOFT) DMA_0_Handler (void)
 {
     DMA_0_InterruptHandler();
+}
+
+void __ISR(_DMA_1_VECTOR, ipl1SOFT) DMA_1_Handler (void)
+{
+    DMA_1_InterruptHandler();
 }
 
 

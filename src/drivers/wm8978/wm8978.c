@@ -1,6 +1,6 @@
 #include "../../config/default/device.h"
 #include "wm8978.h"
-#include "../i2c/i2c.h"
+#include "../i2c/i2c_gpio.h"
 #include "../i2s/i2s.h"
 #include <stdio.h>
 #include <string.h>
@@ -8,7 +8,7 @@
 //#define WM8978_DEBUG
 
 /*------------------------   I2C control WM8978 config  -------------------------------------------*/
-static uint8_t regBuf[2] = {0};
+//static uint8_t regBuf[2] = {0};
 
 static uint8_t wm8978_i2c_WriteReg(uint8_t regAddr, uint16_t regValue);
 static uint16_t wm8978_ReadReg(uint8_t regAddr);
@@ -40,12 +40,38 @@ static uint16_t wm8978_RegBuf[] = {
  */
 uint8_t wm8978_i2c_WriteReg(uint8_t regAddr, uint16_t regValue)
 {
+#ifdef WM8978_DEBUG
+    printf("wm8978: send to addr %d with value: %d\n", regAddr, regValue);
+#endif
+    /*
     regBuf[0] = ((regAddr << 1) & 0xFE) | ((regValue >> 8) & 0x1);
     regBuf[1] = regValue & 0xFF;
     if (I2C2_WriteBytes(WM8978_ADDRESS, regBuf, 2))
         return 1;
     else
+        return 0;*/
+    uint8_t ucAck;
+    // Start the config sequence
+    i2c2_Start();
+    // Transmit the slave address and enable writing operation
+    i2c2_SendByte(WM8978_ADDRESS << 1 | I2C_WR);
+    ucAck = i2c2_WaitAck();
+    if (ucAck)
         return 0;
+    // Transmit the first address for write operation
+    i2c2_SendByte(((regAddr << 1) & 0xFE) | ((regValue >> 8) & 0x1));
+    ucAck = i2c2_WaitAck();
+    if (ucAck)
+        return 0;
+    // Prepare the register value to be sent
+    i2c2_SendByte(regValue & 0xFF);
+    ucAck = i2c2_WaitAck();
+    if (ucAck)
+        return 0;
+    // End the configuration sequence
+    i2c2_Stop();
+    // Return the verifying value: 0 (Passed) or 1 (Failed)
+    return 1;
 }
 
 /**

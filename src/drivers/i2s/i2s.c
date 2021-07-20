@@ -121,6 +121,9 @@ void I2S_Start()
             i2s_setup.i2sReceiveSize,
             2);
 #ifdef I2S_DEBUG
+    printf("i2sTransmitAddress: %p\n", i2s_setup.i2sTransmitAddress);
+    printf("i2sReceiveAddress: %p\n", i2s_setup.i2sReceiveAddress);
+    
     printf("src address: %x\n", DCH0SSA);
     printf("dest address: %x\n", DCH0DSA);
     printf("cell size: %x\n", DCH0CSIZ);

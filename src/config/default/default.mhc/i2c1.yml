@@ -12,6 +12,13 @@ children:
       - type: Dynamic
         attributes: {id: i2c1, value: '46'}
   - type: Integer
+    attributes: {id: I2CS_CORE_TIMER_FREQUENCY}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: i2c1, value: '20000000'}
+  - type: Integer
     attributes: {id: I2CS_RISE_TIME_CORE_TIMER_CNTS}
     children:
     - type: Values
@@ -25,6 +32,13 @@ children:
       children:
       - type: Dynamic
         attributes: {id: i2c1, value: '2'}
+  - type: Integer
+    attributes: {id: I2C_CLOCK_FREQ}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: i2c1, value: '40000000'}
   - type: Long
     attributes: {id: I2C_CLOCK_SPEED}
     children:
@@ -40,4 +54,4 @@ children:
       - type: Dynamic
         attributes: {id: i2c1, value: '400000'}
 - type: ElementPosition
-  attributes: {x: '24', y: '367', id: i2c1}
+  attributes: {x: '24', y: '366', id: i2c1}
