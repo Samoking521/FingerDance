@@ -4,7 +4,8 @@
 doc # 项目文档
 ├───MicroSD
 ├───MUSIC
-└───OLED
+├───OLED
+└───WS2812B
 sd_files # sd卡存放文件
 src # 项目源码
 ├───application # 程序应用

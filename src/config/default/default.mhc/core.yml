@@ -694,13 +694,20 @@ children:
       children:
       - type: Dynamic
         attributes: {id: core, value: '0'}
+  - type: String
+    attributes: {id: DCH0_CON_CHPRI_VALUE}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: core, value: '3'}
   - type: Hex
     attributes: {id: DCH0_CON_VALUE}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: '16'}
+        attributes: {id: core, value: '19'}
   - type: Integer
     attributes: {id: DCH0_ECON_SIRQEN_VALUE}
     children:
@@ -764,6 +771,20 @@ children:
       children:
       - type: User
         attributes: {value: 'false'}
+  - type: Combo
+    attributes: {id: DMAC_0_PRIORITY}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: CHPRI3}
+  - type: Integer
+    attributes: {id: DMAC_0_PRIORITY_VALUE}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: core, value: '3'}
   - type: Boolean
     attributes: {id: DMAC_0_SOURCE_HALF_EMPTY_INT_ENABLE}
     children:
@@ -975,6 +996,27 @@ children:
       children:
       - type: Dynamic
         attributes: {id: core, value: CORE_TIMER_Handler}
+  - type: Boolean
+    attributes: {id: EVIC_16_ENABLE}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: core, value: 'true'}
+  - type: Boolean
+    attributes: {id: EVIC_16_HANDLER_LOCK}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: core, value: 'true'}
+  - type: String
+    attributes: {id: EVIC_16_INTERRUPT_HANDLER}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: core, value: TIMER_4_InterruptHandler}
   - type: Boolean
     attributes: {id: EVIC_1_ENABLE}
     children:
@@ -1226,21 +1268,21 @@ children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: 'true'}
+        attributes: {id: core, value: 'false'}
   - type: Boolean
     attributes: {id: EVIC_8_HANDLER_LOCK}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: 'true'}
+        attributes: {id: core, value: 'false'}
   - type: String
     attributes: {id: EVIC_8_INTERRUPT_HANDLER}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: TIMER_2_InterruptHandler}
+        attributes: {id: core, value: TIMER_2_Handler}
   - type: Boolean
     attributes: {id: I2C1_CLOCK_ENABLE}
     children:
@@ -1394,7 +1436,7 @@ children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: '29'}
+        attributes: {id: core, value: '21'}
   - type: Hex
     attributes: {id: PMD5_REG_VALUE}
     children:
@@ -1819,28 +1861,56 @@ children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: tmr2, value: 'true'}
+        attributes: {id: tmr2, value: 'false'}
   - type: Boolean
     attributes: {id: TIMER_2_INTERRUPT_ENABLE_UPDATE}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: 'false'}
+        attributes: {id: core, value: 'true'}
   - type: String
     attributes: {id: TIMER_2_INTERRUPT_HANDLER}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: tmr2, value: TIMER_2_InterruptHandler}
+        attributes: {id: tmr2, value: TIMER_2_Handler}
   - type: Boolean
     attributes: {id: TIMER_2_INTERRUPT_HANDLER_LOCK}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: tmr2, value: 'true'}
+        attributes: {id: tmr2, value: 'false'}
+  - type: Boolean
+    attributes: {id: TIMER_4_INTERRUPT_ENABLE}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: tmr4, value: 'true'}
+  - type: Boolean
+    attributes: {id: TIMER_4_INTERRUPT_ENABLE_UPDATE}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: core, value: 'false'}
+  - type: String
+    attributes: {id: TIMER_4_INTERRUPT_HANDLER}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: tmr4, value: TIMER_4_InterruptHandler}
+  - type: Boolean
+    attributes: {id: TIMER_4_INTERRUPT_HANDLER_LOCK}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: tmr4, value: 'true'}
   - type: Boolean
     attributes: {id: TMR1_CLOCK_ENABLE}
     children:
@@ -1876,13 +1946,20 @@ children:
       children:
       - type: Dynamic
         attributes: {id: core, value: '0'}
+  - type: Boolean
+    attributes: {id: TMR4_CLOCK_ENABLE}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: tmr4, value: 'true'}
   - type: Integer
     attributes: {id: TMR4_CLOCK_FREQUENCY}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: '0'}
+        attributes: {id: core, value: '40000000'}
   - type: Integer
     attributes: {id: TMR5_CLOCK_FREQUENCY}
     children:

@@ -5,10 +5,10 @@
     Microchip Technology Inc.
 
   File Name
-    plib_tmr2.c
+    plib_tmr4.c
 
   Summary
-    TMR2 peripheral library source file.
+    TMR4 peripheral library source file.
 
   Description
     This file implements the interface to the TMR peripheral library.  This
@@ -50,64 +50,98 @@
 // *****************************************************************************
 
 #include "device.h"
-#include "plib_tmr2.h"
+#include "plib_tmr4.h"
 
 
+static TMR_TIMER_OBJECT tmr4Obj;
 
 
-void TMR2_Initialize(void)
+void TMR4_Initialize(void)
 {
     /* Disable Timer */
-    T2CONCLR = _T2CON_ON_MASK;
+    T4CONCLR = _T4CON_ON_MASK;
 
     /*
     SIDL = 0
-    TCKPS =1
+    TCKPS =7
     T32   = 0
     TCS = 0
     */
-    T2CONSET = 0x10;
+    T4CONSET = 0x70;
 
     /* Clear counter */
-    TMR2 = 0x0;
+    TMR4 = 0x0;
 
     /*Set period */
-    PR2 = 24U;
+    PR4 = 17967U;
 
+    /* Enable TMR Interrupt */
+    IEC0SET = _IEC0_T4IE_MASK;
 
 }
 
 
-void TMR2_Start(void)
+void TMR4_Start(void)
 {
-    T2CONSET = _T2CON_ON_MASK;
+    T4CONSET = _T4CON_ON_MASK;
 }
 
 
-void TMR2_Stop (void)
+void TMR4_Stop (void)
 {
-    T2CONCLR = _T2CON_ON_MASK;
+    T4CONCLR = _T4CON_ON_MASK;
 }
 
-void TMR2_PeriodSet(uint16_t period)
+void TMR4_PeriodSet(uint16_t period)
 {
-    PR2  = period;
+    PR4  = period;
 }
 
-uint16_t TMR2_PeriodGet(void)
+uint16_t TMR4_PeriodGet(void)
 {
-    return (uint16_t)PR2;
+    return (uint16_t)PR4;
 }
 
-uint16_t TMR2_CounterGet(void)
+uint16_t TMR4_CounterGet(void)
 {
-    return (uint16_t)(TMR2);
+    return (uint16_t)(TMR4);
 }
 
 
-uint32_t TMR2_FrequencyGet(void)
+uint32_t TMR4_FrequencyGet(void)
 {
-    return (20000000);
+    return (156250);
 }
 
 
+void TIMER_4_InterruptHandler (void)
+{
+    uint32_t status  = 0U;
+    status = IFS0bits.T4IF;
+    IFS0CLR = _IFS0_T4IF_MASK;
+
+    if((tmr4Obj.callback_fn != NULL))
+    {
+        tmr4Obj.callback_fn(status, tmr4Obj.context);
+    }
+}
+
+
+void TMR4_InterruptEnable(void)
+{
+    IEC0SET = _IEC0_T4IE_MASK;
+}
+
+
+void TMR4_InterruptDisable(void)
+{
+    IEC0CLR = _IEC0_T4IE_MASK;
+}
+
+
+void TMR4_CallbackRegister( TMR_CALLBACK callback_fn, uintptr_t context )
+{
+    /* Save callback_fn and context in local memory */
+    tmr4Obj.callback_fn = callback_fn;
+    tmr4Obj.context = context;
+}

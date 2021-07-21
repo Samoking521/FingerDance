@@ -31,6 +31,8 @@
 #include "drivers/ws2812b/ws2812b.h"
 #include "drivers/i2c/i2c_gpio.h"
 #include "application/music/music.h"
+#include "application/play_mode/play_mode.h"
+#include "drivers/microSD/microSD.h"
 
 
 
@@ -47,11 +49,13 @@ int main(void)
     printf("Initialize finish!\n");
 
     //OLED_Test();
-    music_init();
-    music_play();
+    //music_init();
+    //music_play();
     //WS2812B_Init();
+    
+    //SD_Init();
     //WS2812B_Test();
-    //i2c2_CheckDevice(0x1A);
+    play_main();
 
     while (true)
     {

@@ -219,8 +219,8 @@ void DMAC_Initialize(void)
 
     /* DMA channel-level control registers.  They will have additional settings made when starting a transfer. */
     /* DMA channel 0 configuration */
-    /* CHPRI = 0, CHAEN= 1, CHCHN= 0, CHCHNS= 0x0, CHAED= 0 */
-    DCH0CON = 0x10;
+    /* CHPRI = 3, CHAEN= 1, CHCHN= 0, CHCHNS= 0x0, CHAED= 0 */
+    DCH0CON = 0x13;
     /* CHSIRQ = 52, SIRQEN = 1 */
     DCH0ECON = 0x3410;
     /* CHBCIE = 1, CHTAIE=1, CHERIE=1, CHSHIE= 1, CHDHIE= 0 */

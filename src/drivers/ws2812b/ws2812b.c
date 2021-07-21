@@ -4,6 +4,7 @@
 #include "../../config/default/peripheral/dmac/plib_dmac.h"
 #include "../../config/default/peripheral/coretimer/plib_coretimer.h"
 #include "../../config/default/peripheral/tmr/plib_tmr2.h"
+#include "../../config/default/peripheral/tmr/plib_tmr4.h"
 #include "../../config/default/peripheral/ocmp/plib_ocmp1.h"
 #include "peripheral/ocmp/plib_ocmp1.h"
 #include <stdio.h>
@@ -18,33 +19,16 @@
 
 #define LED_NUM 40
 
-// led colour, GRB format
-#define BLACK 0x000000
-#define GREEN 0x800000
-#define SILVER 0xC0C0C0
-#define LIME 0xFF0000
-#define GRAY 0x808080
-#define ALIVE 0x808000
-#define WHITE 0xFFFFFF
-#define YELLOW 0xFFFF00
-#define MAROON 0x008000
-#define NAVY 0x000080
-#define RED 0x00FF00
-#define BLUE 0x0000FF
-#define PURPLE 0x008080
-#define TEAL 0x800080
-#define FUCHSIA 0x00FFFF
-#define AQUA 0xFF00FF
 
-#define NOTE 0x431560
-#define HOLD 0x5CCD5C
-#define JUDGE 0x234A5A
 
 static uint16_t sendData[24 * LED_NUM + 40];
 static uint32_t colorBuf[41];
 int flag = 0;
 
+int fall_flag = 0;
+
 static void _WS2812B_DMA_CallbackHandler(DMAC_TRANSFER_EVENT status, uintptr_t contextHandler);
+static void _WS2812B_TIM4_CallbackHandler(uint32_t status, uintptr_t context);
 
 void WS2812B_Init(void)
 {
@@ -56,9 +40,16 @@ void WS2812B_Init(void)
     memset(colorBuf, 0, sizeof (colorBuf));
 
     DMAC_ChannelCallbackRegister(WS2812B_DMA_CHANNEL, _WS2812B_DMA_CallbackHandler, (uintptr_t) NULL);
+    TMR4_CallbackRegister(_WS2812B_TIM4_CallbackHandler, (uintptr_t) NULL);
 
     TMR2_Start();
     OCMP1_Enable();
+
+    WS2812B_SetLED(10, JUDGE);
+    WS2812B_SetLED(20, JUDGE);
+    WS2812B_SetLED(30, JUDGE);
+    WS2812B_SetLED(40, JUDGE);
+    WS2812B_SendData();
 }
 
 void WS2812B_SetLED(uint8_t index, uint32_t color)
@@ -180,7 +171,6 @@ void WS2812B_Test()
     LEDProperty LEDLine[4] = {0};
     for (int i = 0; i < 712; i++)
     {
-        //printf("begin fall: %u\n", CORETIMER_CounterGet());
         memset(LEDLine, 0, sizeof (LEDLine));
         for (int j = 0; j < 4; j++)
         {
@@ -190,9 +180,7 @@ void WS2812B_Test()
                 LEDLine[j].color = HOLD;
         }
         WS2812B_FallALine(LEDLine);
-        //printf("end fall, begin delay: %u\n", CORETIMER_CounterGet());
         CORETIMER_DelayMs(115);
-        //printf("end delay: %u\n", CORETIMER_CounterGet());
     }
 }
 
@@ -201,5 +189,11 @@ void _WS2812B_DMA_CallbackHandler(DMAC_TRANSFER_EVENT status, uintptr_t contextH
     if (DMAC_TRANSFER_EVENT_COMPLETE == status)
     {
         flag = 1;
+
     }
+}
+
+void _WS2812B_TIM4_CallbackHandler(uint32_t status, uintptr_t context)
+{
+    fall_flag = 1;
 }
