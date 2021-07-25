@@ -10,7 +10,11 @@ sd_files # sd卡存放文件
 src # 项目源码
 ├───application # 程序应用
 │   ├───music
-│   └───play_mode
+│   ├───play_mode
+│   ├───pre_mode
+│   ├───screen
+│   ├───sdfile
+│   └───startup_mode
 ├───config # 此目录下为mplab harmony v3 生成文件
 │   └───default
 │       ├───audio

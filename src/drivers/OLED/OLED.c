@@ -11,6 +11,9 @@
 static uint8_t cmdBuf[4] = {0};
 static uint8_t dataBuf[2] = {0};
 static uint8_t pageBuf[129] = {0};
+static uint8_t ScreenBuf[8][128] = {0};
+static uint8_t bitsMaskLowBuf[] = {0x00, 0x01, 0x03, 0x07, 0x0F, 0x1F, 0x3F, 0x7F, 0xFF};
+static uint8_t bitsMaskHighBuf[] = {0x00, 0x80, 0xC0, 0xE0, 0xF0, 0xF8, 0xFC, 0xFE, 0xFF};
 
 static void SendCmd(uint8_t cmd);
 static void SendCmds(uint16_t len);
@@ -125,6 +128,9 @@ void OLED_Init(void)
     SendCmd(0x14); //
     //open display
     SendCmd(0xAF); //--turn on oled panel
+
+    OLED_Fill(0x00);
+    CORETIMER_DelayMs(10);
 }
 
 /**
@@ -157,7 +163,10 @@ void OLED_Fill(uint8_t fill_Data)
         cmdBuf[3] = 0x10; //high column start address
         SendCmds(3);
         for (n = 0; n < 128; n++)
+        {
             pageBuf[n + 1] = fill_Data;
+            ScreenBuf[m][n] = fill_Data;
+        }
         SendPage(128);
     }
 }
@@ -173,7 +182,10 @@ void OLED_FillArea(uint8_t x1, uint8_t x2, uint8_t y, uint8_t data)
     OLED_SetPos(x1, y);
     uint8_t x = x2 - x1;
     for (int i = 0; i < x; i++)
+    {
         pageBuf[i + 1] = data;
+        ScreenBuf[y][x1 + i] = data;
+    }
     SendPage(x);
 }
 
@@ -214,6 +226,51 @@ void OLED_OFF(void)
 }
 
 /**
+ * @brief  show custom content
+ * @param  x, y: (x:0~127, y:0~63)
+ *          ch[]: show content 
+ * @retval None
+ */
+void OLED_Show(uint8_t x, uint8_t y, uint8_t ch[], uint8_t len)
+{
+    uint8_t i = 0;
+
+    uint8_t y1 = y;
+    uint8_t y2 = y + 7;
+    uint8_t page1 = y1 / 8;
+    uint8_t page2 = y2 / 8;
+    uint8_t line = y1 - page1 * 8;
+    /*
+    printf("x: %d\n", x);
+    printf("y1: %d\n", y1);
+    printf("y2: %d\n", y2);
+    printf("page1: %d\n", page1);
+    printf("page2: %d\n", page2);
+    printf("line: %d\n", line);*/
+
+    if (x + 6 > 127)
+        return;
+
+    OLED_SetPos(x, page1);
+    for (i = 0; i < len; i++)
+    {
+        pageBuf[i + 1] = (ch[i] & bitsMaskLowBuf[8 - line]) << line | (ScreenBuf[page1][x + i] & bitsMaskLowBuf[line]);
+        ScreenBuf[page1][x + i] = pageBuf[i + 1];
+    }
+    SendPage(len);
+    if (page2 < 8)
+    {
+        OLED_SetPos(x, page2);
+        for (i = 0; i < len; i++)
+        {
+            pageBuf[i + 1] = (ch[i] & bitsMaskHighBuf[line]) >> (8 - line) | (ScreenBuf[page2][x + i] & bitsMaskHighBuf[8 - line]);
+            ScreenBuf[page2][x + i] = pageBuf[i + 1];
+        }
+        SendPage(len);
+    }
+}
+
+/**
  * @brief  show ASCII character
  * @param  x, y: (x:0~127, y:0~7)
  *          ch[]: show string 
@@ -237,7 +294,10 @@ void OLED_ShowStr(uint8_t x, uint8_t y, uint8_t ch[], uint8_t TextSize)
                 }
                 OLED_SetPos(x, y);
                 for (i = 0; i < 6; i++)
+                {
                     pageBuf[i + 1] = F6x8[c][i];
+                    ScreenBuf[y][x + i] = F6x8[c][i];
+                }
                 SendPage(6);
                 x += 6;
                 j++;
@@ -269,6 +329,57 @@ void OLED_ShowStr(uint8_t x, uint8_t y, uint8_t ch[], uint8_t TextSize)
             }
         }
             break;
+    }
+}
+
+/**
+ * @brief  show ASCII character
+ * @param  x, y: (x:0~127, y:0~63)
+ *          ch[]: show string 
+ * @retval None
+ */
+void OLED_ShowStrEx(uint8_t x, uint8_t y, uint8_t ch[])
+{
+    uint8_t c = 0, i = 0, j = 0;
+
+    uint8_t y1 = y;
+    uint8_t y2 = y + 7;
+    uint8_t page1 = y1 / 8;
+    uint8_t page2 = y2 / 8;
+    uint8_t line = y1 - page1 * 8; // offset page1
+    /*
+    printf("y1: %d\n", y1);
+    printf("y2: %d\n", y2);
+    printf("page1: %d\n", page1);
+    printf("page2: %d\n", page2);
+    printf("line: %d\n", line);
+     */
+    while (ch[j] != '\0')
+    {
+        c = ch[j] - 32;
+        if (x + 6 > 127)
+            break;
+
+        OLED_SetPos(x, page1);
+        for (i = 0; i < 6; i++)
+        {
+            pageBuf[i + 1] = (F6x8[c][i] & bitsMaskLowBuf[8 - line]) << line | (ScreenBuf[page1][x + i] & bitsMaskLowBuf[line]);
+            ScreenBuf[page1][x + i] = pageBuf[i + 1];
+        }
+        SendPage(6);
+        if (page2 < 8)
+        {
+            OLED_SetPos(x, page2);
+            for (i = 0; i < 6; i++)
+            {
+                pageBuf[i + 1] = (F6x8[c][i] & bitsMaskHighBuf[line]) >> (8 - line) | (ScreenBuf[page2][x + i] & bitsMaskHighBuf[8 - line]);
+                ScreenBuf[page2][x + i] = pageBuf[i + 1];
+            }
+            SendPage(6);
+        }
+
+        x += 6;
+        j++;
     }
 }
 
@@ -305,9 +416,9 @@ void OLED_Test()
     OLED_Init();
     OLED_Fill(0x00);
     CORETIMER_DelayMs(10);
-    
+
     OLED_FillArea(0, 128, 0, 0xFF);
-    
+
     uint8_t num[] = "0";
     for (int i = 0;;)
     {
