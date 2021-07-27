@@ -13,8 +13,6 @@
 #define MUSIC_BUFSIZE 8192
 
 FATFS fs; //define here temporarily
-extern AudioDevice audioDev;
-extern WavCtrl wavCtrl;
 
 void play_main()
 {
@@ -81,4 +79,14 @@ void play_main()
             fall_flag = 0;
         }
     }
+}
+
+void play_screen()
+{
+    
+}
+
+void play_test()
+{
+    
 }

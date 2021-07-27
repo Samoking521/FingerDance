@@ -7,8 +7,10 @@ doc # 项目文档
 ├───OLED
 └───WS2812B
 sd_files # sd卡存放文件
+└───music
 src # 项目源码
 ├───application # 程序应用
+│   ├───game_mode
 │   ├───music
 │   ├───play_mode
 │   ├───pre_mode
@@ -38,6 +40,7 @@ src # 项目源码
 ├───drivers # 硬件驱动
 │   ├───i2c
 │   ├───i2s
+│   ├───key
 │   ├───microSD
 │   ├───OLED
 │   ├───spi

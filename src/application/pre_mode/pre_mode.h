@@ -21,5 +21,6 @@ typedef struct
 
 void pre_main();
 void pre_screen();
+void pre_test();
 
 #endif

@@ -30,13 +30,17 @@
 #include "drivers/OLED/OLED.h"
 #include "drivers/ws2812b/ws2812b.h"
 #include "drivers/i2c/i2c_gpio.h"
+#include "drivers/key/key.h"
 #include "application/music/music.h"
 #include "application/screen/screen.h"
-#include "application/play_mode/play_mode.h"
+#include "application/sdfile/sdfile.h"
 #include "application/pre_mode/pre_mode.h"
+#include "application/play_mode/play_mode.h"
+#include "application/game_mode/game_mode.h"
 #include "drivers/microSD/microSD.h"
+#include "main.h"
 
-
+MODE modeCtrl = init_mode;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -50,34 +54,42 @@ int main(void)
     SYS_Initialize(NULL);
     printf("Initialize finish!\n");
 
-    //OLED_Test();
-    //music_init();
-    //music_play();
-    //WS2812B_Init();
+    main_init();
 
-    //SD_Init();
-    //WS2812B_Test();
-    //Screen_Init();
-    //Screen_Test();
-    pre_main();
-    //play_main();
 
     while (true)
     {
-        /* Maintain state machines of all polled MPLAB Harmony modules. */
-        GPIO_PinSet(LED1_PIN);
-        //GPIO_PinSet(I2C2_SCL_PIN);
-        //GPIO_PinClear(I2C2_SDA_PIN);
-        CORETIMER_DelayMs(500);
-        GPIO_PinClear(LED1_PIN);
-        //GPIO_PinClear(I2C2_SCL_PIN);
-        //GPIO_PinSet(I2C2_SDA_PIN);
-        CORETIMER_DelayMs(500);
+        switch (modeCtrl)
+        {
+            case init_mode:
+                break;
+            case start_mode:
+                break;
+            case pre_mode:
+                pre_main();
+                break;
+            case play_mode:
+                play_main();
+                break;
+            case game_mode:
+                game_main();
+                break;
+        }
     }
 
     /* Execution should not come here during normal operation */
 
     return ( EXIT_FAILURE);
+}
+
+void main_init()
+{
+    //drivers init
+    sdFile_Init();
+    Screen_Init();
+    WS2812B_Init();
+    //mode init
+    modeCtrl = pre_mode;
 }
 
 

@@ -131,6 +131,20 @@ void WS2812B_DataCopy(uint8_t dst, uint8_t src)
     memcpy(sendData + Dst, sendData + Src, 24 * sizeof (uint16_t));
 }
 
+void WS2812B_SetJudgeLine(LEDProperty *ledLine)
+{
+    //Set judge line data
+    if (ledLine[0].index > 0)
+        WS2812B_SetLED(10, ledLine[0].color);
+    if (ledLine[1].index > 0)
+        WS2812B_SetLED(20, ledLine[1].color);
+    if (ledLine[2].index > 0)
+        WS2812B_SetLED(30, ledLine[2].color);
+    if (ledLine[3].index > 0)
+        WS2812B_SetLED(40, ledLine[3].color);
+    WS2812B_SendData();
+}
+
 void WS2812B_Test()
 {
     /*//Test LED coloue

@@ -15,7 +15,7 @@ typedef struct {
     //bit1: 0, stop play; 1, begin play
 } AudioDevice;
 
-extern AudioDevice audiodev;
+extern AudioDevice audioDev;
 
 
 void music_start(void);

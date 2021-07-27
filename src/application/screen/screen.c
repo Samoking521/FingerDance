@@ -4,6 +4,11 @@
 
 extern const unsigned char F6x8[][6];
 
+/**
+ * @brief  show whole game background text
+ * @param  
+ * @retval None
+ */
 void Screen_Init()
 {
     OLED_Init();
@@ -18,16 +23,23 @@ void Screen_Init()
     OLED_Show(0, 56, ch, 128);
 }
 
+/**
+ * @brief  show pre mode background text
+ * @param  
+ * @retval None
+ */
 void Screen_LoadPreMode()
 {
     Screen_ShowMusicText();
 }
 
+/**
+ * @brief  show music file
+ * @param  
+ * @retval None
+ */
 void Screen_ShowFileList(MusicInfo *musicInfo, int fileIndexStart, int fileIndexStop, int fileNum)
 {
-    printf("start: %d\n", fileIndexStart);
-    printf("stop: %d\n", fileIndexStop);
-
     uint8_t startline[] = {3, 13, 23, 33, 43, 53};
     int i = fileIndexStart;
     int j = 0;
@@ -128,6 +140,11 @@ void Screen_ShowMusicInfo(uint8_t bpm, uint8_t min, uint8_t sec)
     Screen_ShowStr(86, startline[3], strLen);
 }
 
+/**
+ * @brief  cursor down a line
+ * @param  
+ * @retval None
+ */
 void Screen_LineDown(MusicInfo *musicInfo, int fileNum, int fileIndex)
 {
     uint8_t startline[] = {3, 13, 23, 33, 43, 53};
@@ -139,6 +156,11 @@ void Screen_LineDown(MusicInfo *musicInfo, int fileNum, int fileIndex)
     Screen_ShowFileList(musicInfo, (fileIndex - 4 + fileNum) % fileNum, (fileIndex + 1) % fileNum, fileNum);
 }
 
+/**
+ * @brief  cursor up a line
+ * @param  
+ * @retval None
+ */
 void Screen_LineUp(MusicInfo *musicInfo, int fileNum, int fileIndex)
 {
     uint8_t startline[] = {3, 13, 23, 33, 43, 53};
@@ -148,6 +170,16 @@ void Screen_LineUp(MusicInfo *musicInfo, int fileNum, int fileIndex)
     for (int i = 0; i < 6; i++)
         OLED_Show(4, startline[i], ch, 72);
     Screen_ShowFileList(musicInfo, (fileIndex - 1 + fileNum) % fileNum, (fileIndex + 4) % fileNum, fileNum);
+}
+
+/**
+ * @brief  show game mode background text
+ * @param  
+ * @retval None
+ */
+void Screen_LoadGameMode()
+{
+    
 }
 
 void Screen_ShowStr(int x, int y, uint8_t str[])

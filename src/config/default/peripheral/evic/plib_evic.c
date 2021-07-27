@@ -44,6 +44,10 @@
 #include "plib_evic.h"
 
 
+EXT_INT_PIN_CALLBACK_OBJ extInt1CbObj;
+EXT_INT_PIN_CALLBACK_OBJ extInt2CbObj;
+EXT_INT_PIN_CALLBACK_OBJ extInt3CbObj;
+EXT_INT_PIN_CALLBACK_OBJ extInt4CbObj;
 // *****************************************************************************
 // *****************************************************************************
 // Section: IRQ Implementation
@@ -55,11 +59,23 @@ void EVIC_Initialize( void )
     INTCONSET = _INTCON_MVEC_MASK;
 
     /* Set up priority and subpriority of enabled interrupts */
+    IPC1SET = 0x4000000 | 0x0;  /* EXTERNAL_1:  Priority 1 / Subpriority 0 */
+    IPC2SET = 0x4000000 | 0x0;  /* EXTERNAL_2:  Priority 1 / Subpriority 0 */
+    IPC3SET = 0x4000000 | 0x0;  /* EXTERNAL_3:  Priority 1 / Subpriority 0 */
     IPC4SET = 0x4 | 0x0;  /* TIMER_4:  Priority 1 / Subpriority 0 */
+    IPC4SET = 0x4000000 | 0x0;  /* EXTERNAL_4:  Priority 1 / Subpriority 0 */
     IPC8SET = 0x400 | 0x0;  /* I2C_1:  Priority 1 / Subpriority 0 */
     IPC10SET = 0x4 | 0x0;  /* DMA_0:  Priority 1 / Subpriority 0 */
     IPC10SET = 0x400 | 0x0;  /* DMA_1:  Priority 1 / Subpriority 0 */
 
+    /* Initialize External interrupt 1 callback object */
+    extInt1CbObj.callback = NULL;
+    /* Initialize External interrupt 2 callback object */
+    extInt2CbObj.callback = NULL;
+    /* Initialize External interrupt 3 callback object */
+    extInt3CbObj.callback = NULL;
+    /* Initialize External interrupt 4 callback object */
+    extInt4CbObj.callback = NULL;
 
 }
 
@@ -131,6 +147,133 @@ void EVIC_INT_Restore( bool state )
     {
         /* restore the state of CP0 Status register before the disable occurred */
         __builtin_enable_interrupts();
+    }
+}
+
+void EVIC_ExternalInterruptEnable( EXTERNAL_INT_PIN extIntPin )
+{
+    IEC0SET = extIntPin;
+}
+
+void EVIC_ExternalInterruptDisable( EXTERNAL_INT_PIN extIntPin )
+{
+    IEC0CLR = extIntPin;
+}
+
+bool EVIC_ExternalInterruptCallbackRegister(
+    EXTERNAL_INT_PIN extIntPin,
+    const EXTERNAL_INT_PIN_CALLBACK callback,
+    uintptr_t context
+)
+{
+    bool status = true;
+    switch  (extIntPin)
+        {
+        case EXTERNAL_INT_1:
+            extInt1CbObj.callback = callback;
+            extInt1CbObj.context  = context;
+            break;
+        case EXTERNAL_INT_2:
+            extInt2CbObj.callback = callback;
+            extInt2CbObj.context  = context;
+            break;
+        case EXTERNAL_INT_3:
+            extInt3CbObj.callback = callback;
+            extInt3CbObj.context  = context;
+            break;
+        case EXTERNAL_INT_4:
+            extInt4CbObj.callback = callback;
+            extInt4CbObj.context  = context;
+            break;
+        default:
+            status = false;
+            break;
+        }
+
+    return status;
+}
+
+
+// *****************************************************************************
+/* Function:
+    void EXTERNAL_1_InterruptHandler()
+
+  Summary:
+    Interrupt Handler for External Interrupt pin 1.
+
+  Remarks:
+	It is an internal function called from ISR, user should not call it directly.
+*/
+void EXTERNAL_1_InterruptHandler()
+{
+    IFS0CLR = _IFS0_INT1IF_MASK;
+
+    if(extInt1CbObj.callback != NULL)
+    {
+        extInt1CbObj.callback (EXTERNAL_INT_1, extInt1CbObj.context);
+    }
+}
+
+
+// *****************************************************************************
+/* Function:
+    void EXTERNAL_2_InterruptHandler()
+
+  Summary:
+    Interrupt Handler for External Interrupt pin 2.
+
+  Remarks:
+	It is an internal function called from ISR, user should not call it directly.
+*/
+void EXTERNAL_2_InterruptHandler()
+{
+    IFS0CLR = _IFS0_INT2IF_MASK;
+
+    if(extInt2CbObj.callback != NULL)
+    {
+        extInt2CbObj.callback (EXTERNAL_INT_2, extInt2CbObj.context);
+    }
+}
+
+
+// *****************************************************************************
+/* Function:
+    void EXTERNAL_3_InterruptHandler()
+
+  Summary:
+    Interrupt Handler for External Interrupt pin 3.
+
+  Remarks:
+	It is an internal function called from ISR, user should not call it directly.
+*/
+void EXTERNAL_3_InterruptHandler()
+{
+    IFS0CLR = _IFS0_INT3IF_MASK;
+
+    if(extInt3CbObj.callback != NULL)
+    {
+        extInt3CbObj.callback (EXTERNAL_INT_3, extInt3CbObj.context);
+    }
+}
+
+
+// *****************************************************************************
+/* Function:
+    void EXTERNAL_4_InterruptHandler()
+
+  Summary:
+    Interrupt Handler for External Interrupt pin 4.
+
+  Remarks:
+	It is an internal function called from ISR, user should not call it directly.
+*/
+void EXTERNAL_4_InterruptHandler()
+{
+    IFS0CLR = _IFS0_INT4IF_MASK;
+
+    if(extInt4CbObj.callback != NULL)
+    {
+        extInt4CbObj.callback (EXTERNAL_INT_4, extInt4CbObj.context);
     }
 }
 

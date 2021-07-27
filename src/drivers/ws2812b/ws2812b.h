@@ -39,6 +39,7 @@ void WS2812B_SendData();
 void WS2812B_RefreshData();
 void WS2812B_FallALine(LEDProperty *ledLine);
 void WS2812B_DataCopy(uint8_t dst, uint8_t src);
+void WS2812B_SetJudgeLine(LEDProperty *ledLine);
 void WS2812B_Test();
 
 #endif

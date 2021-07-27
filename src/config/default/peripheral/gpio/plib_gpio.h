@@ -98,6 +98,15 @@
 #define LED2_Get()               ((PORTC >> 1) & 0x1)
 #define LED2_PIN                  GPIO_PIN_RC1
 
+/*** Macros for KEY1 pin ***/
+#define KEY1_Set()               (LATCSET = (1<<2))
+#define KEY1_Clear()             (LATCCLR = (1<<2))
+#define KEY1_Toggle()            (LATCINV= (1<<2))
+#define KEY1_OutputEnable()      (TRISCCLR = (1<<2))
+#define KEY1_InputEnable()       (TRISCSET = (1<<2))
+#define KEY1_Get()               ((PORTC >> 2) & 0x1)
+#define KEY1_PIN                  GPIO_PIN_RC2
+
 /*** Macros for SD_CS pin ***/
 #define SD_CS_Set()               (LATBSET = (1<<4))
 #define SD_CS_Clear()             (LATBCLR = (1<<4))
@@ -106,6 +115,33 @@
 #define SD_CS_InputEnable()       (TRISBSET = (1<<4))
 #define SD_CS_Get()               ((PORTB >> 4) & 0x1)
 #define SD_CS_PIN                  GPIO_PIN_RB4
+
+/*** Macros for KEY2 pin ***/
+#define KEY2_Set()               (LATCSET = (1<<3))
+#define KEY2_Clear()             (LATCCLR = (1<<3))
+#define KEY2_Toggle()            (LATCINV= (1<<3))
+#define KEY2_OutputEnable()      (TRISCCLR = (1<<3))
+#define KEY2_InputEnable()       (TRISCSET = (1<<3))
+#define KEY2_Get()               ((PORTC >> 3) & 0x1)
+#define KEY2_PIN                  GPIO_PIN_RC3
+
+/*** Macros for KEY3 pin ***/
+#define KEY3_Set()               (LATCSET = (1<<4))
+#define KEY3_Clear()             (LATCCLR = (1<<4))
+#define KEY3_Toggle()            (LATCINV= (1<<4))
+#define KEY3_OutputEnable()      (TRISCCLR = (1<<4))
+#define KEY3_InputEnable()       (TRISCSET = (1<<4))
+#define KEY3_Get()               ((PORTC >> 4) & 0x1)
+#define KEY3_PIN                  GPIO_PIN_RC4
+
+/*** Macros for KEY4 pin ***/
+#define KEY4_Set()               (LATCSET = (1<<5))
+#define KEY4_Clear()             (LATCCLR = (1<<5))
+#define KEY4_Toggle()            (LATCINV= (1<<5))
+#define KEY4_OutputEnable()      (TRISCCLR = (1<<5))
+#define KEY4_InputEnable()       (TRISCSET = (1<<5))
+#define KEY4_Get()               ((PORTC >> 5) & 0x1)
+#define KEY4_PIN                  GPIO_PIN_RC5
 
 /*** Macros for DIN pin ***/
 #define DIN_Get()               ((PORTB >> 7) & 0x1)
