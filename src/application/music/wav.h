@@ -75,4 +75,5 @@ typedef struct
 extern WavCtrl wavCtrl;
 
 uint8_t wav_DecodeInit(uint8_t *fname, WavCtrl *wavx);
+
 #endif

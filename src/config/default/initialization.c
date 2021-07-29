@@ -183,6 +183,9 @@ void SYS_Initialize ( void* data )
 
 	GPIO_Initialize();
 
+    DMAC_Initialize();
+    OCMP1_Initialize();
+
     CORETIMER_Initialize();
     I2C1_Initialize();
     TMR4_Initialize();
@@ -193,8 +196,7 @@ void SYS_Initialize ( void* data )
 
     TMR2_Initialize();
 
-    DMAC_Initialize();
-    OCMP1_Initialize();
+    TMR3_Initialize();
 
 	SPI1_Initialize();
 

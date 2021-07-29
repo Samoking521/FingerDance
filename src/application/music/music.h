@@ -16,6 +16,9 @@ typedef struct {
     FIL file; //music file pointer
     uint8_t status; //bit0: 0, pause play; 1, continue play
                     //bit1: 0, stop play; 1, begin play
+    uint32_t txSize;
+    uint32_t curSec;
+    uint32_t totSec;
 } AudioDevice;
 
 extern AudioDevice audioDev;
@@ -26,7 +29,6 @@ void music_Stop(void);
 void music_Init();
 uint8_t music_Play(uint8_t* fname);
 uint32_t music_buffer_fill(uint8_t *buf, uint16_t size, uint8_t bits);
-uint8_t music_play_song(uint8_t* fname);
-
+uint16_t music_GetCurSec();
 
 #endif

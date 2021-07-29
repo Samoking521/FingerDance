@@ -62,6 +62,7 @@
 
 void EXTERNAL_1_InterruptHandler( void );
 void EXTERNAL_2_InterruptHandler( void );
+void TIMER_3_InterruptHandler( void );
 void EXTERNAL_3_InterruptHandler( void );
 void TIMER_4_InterruptHandler( void );
 void EXTERNAL_4_InterruptHandler( void );
@@ -81,6 +82,11 @@ void __ISR(_EXTERNAL_1_VECTOR, ipl1SOFT) EXTERNAL_1_Handler (void)
 void __ISR(_EXTERNAL_2_VECTOR, ipl1SOFT) EXTERNAL_2_Handler (void)
 {
     EXTERNAL_2_InterruptHandler();
+}
+
+void __ISR(_TIMER_3_VECTOR, ipl1SOFT) TIMER_3_Handler (void)
+{
+    TIMER_3_InterruptHandler();
 }
 
 void __ISR(_EXTERNAL_3_VECTOR, ipl1SOFT) EXTERNAL_3_Handler (void)

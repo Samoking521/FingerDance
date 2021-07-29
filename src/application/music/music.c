@@ -59,7 +59,11 @@ uint8_t music_Play(uint8_t* fname)
         if (res_sd == FR_OK)
         {
             f_lseek(&audioDev.file, wavCtrl.datastart); //jump to data block
+            
             audioDev.wavWhichBuf = 0;
+            audioDev.totSec = wavCtrl.totsec;
+            audioDev.curSec = 0;
+            audioDev.txSize = 0;
 
             music_buffer_fill(i2sBuf[0], MUSIC_BUFSIZE, wavCtrl.bps);
             music_buffer_fill(i2sBuf[1], MUSIC_BUFSIZE, wavCtrl.bps);
@@ -146,25 +150,11 @@ void music_pre_play()
  */
 uint32_t music_buffer_fill(uint8_t *buf, uint16_t size, uint8_t bits)
 {
-    //uint16_t readlen = 0;
     UINT fnum;
     uint16_t i;
-    //uint8_t *p;
+
     if (bits == 24) //24bit
     {
-        /*
-        readlen = (size / 4) * 3;
-        f_read(&audioDev.file, audioDev.tmpBuf, readlen, &fnum);
-        p = audioDev.tmpBuf;
-        for (i = 0; i < size;)
-        {
-            buf[i++] = p[1];
-            buf[i] = p[2];
-            i += 2;
-            buf[i++] = p[0];
-            p += 3;
-        }
-        fnum = (fnum * 4) / 3;*/
     }
     else
     {
@@ -175,7 +165,14 @@ uint32_t music_buffer_fill(uint8_t *buf, uint16_t size, uint8_t bits)
                 buf[i] = 0;
         }
     }
+    
     return fnum;
+}
+
+uint16_t music_GetCurSec()
+{
+    audioDev.curSec = audioDev.txSize / wavCtrl.samplerate / 4;
+    return audioDev.curSec;
 }
 
 void music_tx_CallbackHandler(DMAC_TRANSFER_EVENT status, uintptr_t contextHandler)
@@ -186,6 +183,7 @@ void music_tx_CallbackHandler(DMAC_TRANSFER_EVENT status, uintptr_t contextHandl
         printf("Buf1 end play, Buf2 start play: %d\n", CORETIMER_CounterGet());
 #endif
         audioDev.wavWhichBuf = 2;
+        audioDev.txSize += MUSIC_BUFSIZE;
     }
     else if (DMAC_TRANSFER_EVENT_COMPLETE == status)
     {
@@ -193,5 +191,6 @@ void music_tx_CallbackHandler(DMAC_TRANSFER_EVENT status, uintptr_t contextHandl
         printf("Buf2 end play, Buf1 start play: %d\n", CORETIMER_CounterGet());
 #endif
         audioDev.wavWhichBuf = 1;
+        audioDev.txSize += MUSIC_BUFSIZE;
     }
 }

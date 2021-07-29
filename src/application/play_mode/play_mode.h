@@ -16,7 +16,9 @@ typedef struct {
 
 typedef struct {
     uint8_t game_end;
+    uint8_t len_flag;
     uint32_t beat_num;
+    uint32_t show_tick;
 } PLAY_MODE_CTRL;
 
 void play_Init();

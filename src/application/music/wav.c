@@ -60,6 +60,8 @@ uint8_t wav_DecodeInit(uint8_t *fname, WavCtrl *wavx)
         wavx->bps = fmt->BitsPerSample;
         wavx->datasize = data->ChunkSize;
         wavx->datastart = wavx->datastart + 8;
+        wavx->totsec = wavCtrl.datasize / wavCtrl.samplerate / 4;
+        wavx->cursec = 0;
 #ifdef WAV_DEBUG
         printf("wavx->audioformat:%d\n", wavx->audioformat);
         printf("wavx->nchannels:%d\n", wavx->nchannels);
@@ -69,6 +71,7 @@ uint8_t wav_DecodeInit(uint8_t *fname, WavCtrl *wavx)
         printf("wavx->bps:%d\n", wavx->bps);
         printf("wavx->datasize:%d\n", wavx->datasize);
         printf("wavx->datastart:%d\n", wavx->datastart);
+        printf("wavx->totsec:%d\n", wavx->totsec);
 #endif
       }
       else

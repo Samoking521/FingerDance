@@ -5,6 +5,7 @@
 #include "../screen/screen.h"
 #include "../pre_mode/pre_mode.h"
 #include "../../config/default/peripheral/coretimer/plib_coretimer.h"
+#include "../../config/default/peripheral/tmr/plib_tmr3.h"
 #include "../../drivers/ws2812b/ws2812b.h"
 #include "../../drivers/key/key.h"
 #include "../../utilities/led_queue/led_queue.h"
@@ -17,12 +18,16 @@
 PLAY_MODE_KEYCTRL play_keyCtrl;
 PLAY_MODE_CTRL play_Ctrl;
 
+static void _PLAYSHOW_TIM3_CallbackHandler(uint32_t status, uintptr_t context);
+
 void play_Init()
 {
     LED_Queue_Init();
 
     key_Init();
     key_CallbackRegister(play_key);
+
+    TMR3_CallbackRegister(_PLAYSHOW_TIM3_CallbackHandler, (uintptr_t) NULL);
 
     memset(&play_keyCtrl, 0, sizeof (play_keyCtrl));
     memset(&play_Ctrl, 0, sizeof (play_Ctrl));
@@ -40,6 +45,7 @@ void play_main()
     LEDProperty LEDLine[4] = {0};
     int start_adjust = 12;
 
+    TMR3_Start();
     key_Start();
     LED_Start();
 
@@ -52,8 +58,19 @@ void play_main()
             music_Stop();
             LED_Stop();
             key_Stop();
+            TMR3_Stop();
             printf("play end.\n");
             break;
+        }
+        if (play_Ctrl.len_flag == 1)
+        {
+            uint16_t cursec = music_GetCurSec();
+            uint8_t cur_min = cursec / 60;
+            uint8_t cur_sec = cursec % 60;
+
+            Screen_ShowPlayMusicCurLen(cur_min, cur_sec);
+
+            play_Ctrl.len_flag = 0;
         }
         if (LED_GetFallSign())
         {
@@ -272,4 +289,11 @@ void play_key()
 void play_test()
 {
 
+}
+
+void _PLAYSHOW_TIM3_CallbackHandler(uint32_t status, uintptr_t context)
+{
+    play_Ctrl.show_tick += 1;
+    if (play_Ctrl.show_tick % 10 == 0 && play_Ctrl.len_flag == 0)
+        play_Ctrl.len_flag = 1;
 }

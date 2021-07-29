@@ -1151,6 +1151,27 @@ children:
       - type: Dynamic
         attributes: {id: core, value: EXTERNAL_2_InterruptHandler}
   - type: Boolean
+    attributes: {id: EVIC_12_ENABLE}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: core, value: 'true'}
+  - type: Boolean
+    attributes: {id: EVIC_12_HANDLER_LOCK}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: core, value: 'true'}
+  - type: String
+    attributes: {id: EVIC_12_INTERRUPT_HANDLER}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: core, value: TIMER_3_InterruptHandler}
+  - type: Boolean
     attributes: {id: EVIC_15_ENABLE}
     children:
     - type: Values
@@ -1814,7 +1835,7 @@ children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: '5'}
+        attributes: {id: core, value: '1'}
   - type: Hex
     attributes: {id: PMD5_REG_VALUE}
     children:
@@ -2366,6 +2387,34 @@ children:
       - type: Dynamic
         attributes: {id: tmr2, value: 'false'}
   - type: Boolean
+    attributes: {id: TIMER_3_INTERRUPT_ENABLE}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: tmr3, value: 'true'}
+  - type: Boolean
+    attributes: {id: TIMER_3_INTERRUPT_ENABLE_UPDATE}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: core, value: 'false'}
+  - type: String
+    attributes: {id: TIMER_3_INTERRUPT_HANDLER}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: tmr3, value: TIMER_3_InterruptHandler}
+  - type: Boolean
+    attributes: {id: TIMER_3_INTERRUPT_HANDLER_LOCK}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: tmr3, value: 'true'}
+  - type: Boolean
     attributes: {id: TIMER_4_INTERRUPT_ENABLE}
     children:
     - type: Values
@@ -2449,13 +2498,20 @@ children:
       children:
       - type: Dynamic
         attributes: {id: core, value: '40000000'}
+  - type: Boolean
+    attributes: {id: TMR3_CLOCK_ENABLE}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: tmr3, value: 'true'}
   - type: Integer
     attributes: {id: TMR3_CLOCK_FREQUENCY}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: '0'}
+        attributes: {id: core, value: '40000000'}
   - type: Boolean
     attributes: {id: TMR4_CLOCK_ENABLE}
     children:
