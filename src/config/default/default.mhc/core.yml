@@ -1284,6 +1284,27 @@ children:
       - type: Dynamic
         attributes: {id: core, value: 'false'}
   - type: Boolean
+    attributes: {id: EVIC_20_ENABLE}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: core, value: 'true'}
+  - type: Boolean
+    attributes: {id: EVIC_20_HANDLER_LOCK}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: core, value: 'true'}
+  - type: String
+    attributes: {id: EVIC_20_INTERRUPT_HANDLER}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: core, value: TIMER_5_InterruptHandler}
+  - type: Boolean
     attributes: {id: EVIC_31_ENABLE}
     children:
     - type: Values
@@ -1444,6 +1465,20 @@ children:
       children:
       - type: Dynamic
         attributes: {id: core, value: DMA_1_InterruptHandler}
+  - type: Combo
+    attributes: {id: EVIC_41_PRIORITY}
+    children:
+    - type: Values
+      children:
+      - type: User
+        attributes: {value: '3'}
+  - type: Hex
+    attributes: {id: EVIC_41_PRIVALUE}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: core, value: '3072'}
   - type: Boolean
     attributes: {id: EVIC_4_ENABLE}
     children:
@@ -1779,7 +1814,7 @@ children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: '21'}
+        attributes: {id: core, value: '5'}
   - type: Hex
     attributes: {id: PMD5_REG_VALUE}
     children:
@@ -2359,6 +2394,34 @@ children:
       - type: Dynamic
         attributes: {id: tmr4, value: 'true'}
   - type: Boolean
+    attributes: {id: TIMER_5_INTERRUPT_ENABLE}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: tmr5, value: 'true'}
+  - type: Boolean
+    attributes: {id: TIMER_5_INTERRUPT_ENABLE_UPDATE}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: core, value: 'false'}
+  - type: String
+    attributes: {id: TIMER_5_INTERRUPT_HANDLER}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: tmr5, value: TIMER_5_InterruptHandler}
+  - type: Boolean
+    attributes: {id: TIMER_5_INTERRUPT_HANDLER_LOCK}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: tmr5, value: 'true'}
+  - type: Boolean
     attributes: {id: TMR1_CLOCK_ENABLE}
     children:
     - type: Values
@@ -2407,13 +2470,20 @@ children:
       children:
       - type: Dynamic
         attributes: {id: core, value: '40000000'}
+  - type: Boolean
+    attributes: {id: TMR5_CLOCK_ENABLE}
+    children:
+    - type: Values
+      children:
+      - type: Dynamic
+        attributes: {id: tmr5, value: 'true'}
   - type: Integer
     attributes: {id: TMR5_CLOCK_FREQUENCY}
     children:
     - type: Values
       children:
       - type: Dynamic
-        attributes: {id: core, value: '0'}
+        attributes: {id: core, value: '40000000'}
   - type: Integer
     attributes: {id: UART1_CLOCK_FREQUENCY}
     children:
@@ -2555,4 +2625,4 @@ children:
       - type: User
         attributes: {value: 'true'}
 - type: ElementPosition
-  attributes: {x: '220', y: '18', id: core}
+  attributes: {x: '220', y: '17', id: core}

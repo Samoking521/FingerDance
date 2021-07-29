@@ -31,6 +31,7 @@ uint8_t mc_DecodeInit(uint8_t *fname, MCCtrl *mcx)
             data = (MC_DATA *) (mc_ReadBuffer + 8);
             if (data->ChunkID == 0x61746164)
                 mcx->ledDataLen = data->ChunkSize;
+            mcx->datastart = 16;
 #ifdef MC_DEBUG
             printf("mcx->bpm:%d\n", mcx->bpm);
             printf("mcx->ledDataLen:%d\n", mcx->ledDataLen);

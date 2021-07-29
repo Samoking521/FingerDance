@@ -15,7 +15,14 @@ void Screen_LineDown(MusicInfo *musicInfo, int fileNum, int fileIndex);
 void Screen_LineUp(MusicInfo *musicInfo, int fileNum, int fileIndex);
 
 void Screen_LoadPlayMode();
+
 void Screen_LoadGameMode();
+void Screen_ShowGameText();
+void Screen_ShowMusicName(uint8_t *fname);
+void Screen_ShowMusicTotLen(uint8_t tol_min, uint8_t tol_sec);
+void Screen_ShowMusicCurLen(uint8_t cur_min, uint8_t cur_sec);
+void Screen_ShowMusicScore(uint32_t score);
+void Screen_ShowMusicCombo(uint32_t combo);
 
 void Screen_ShowStr(int x, int y, uint8_t str[]);
 void Screen_ClearArea(int x, int y, int len);

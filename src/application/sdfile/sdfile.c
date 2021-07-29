@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#define SDFILE_DEBUG
+//#define SDFILE_DEBUG
 #define MAX_FILENUM 10
 FATFS sdFile_fs;
 
@@ -101,7 +101,7 @@ void sdFile_GetWAVFiles(MusicInfo *musicInfo, int len)
         wav_filename[j + 3] = 'v';
         wav_filename[j + 4] = '\0';
         
-        printf("%s\n", wav_filename);
+        //printf("%s\n", wav_filename);
 
         if (wav_DecodeInit(wav_filename, &wavCtrl) == 0)
         {

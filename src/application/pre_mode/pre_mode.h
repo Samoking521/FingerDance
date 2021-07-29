@@ -19,6 +19,9 @@ typedef struct
     uint8_t fileIndex;
 } CursorCtrl;
 
+extern MusicInfo musicInfo[10];
+extern CursorCtrl cursorCtrl;
+
 void pre_main();
 void pre_screen();
 void pre_test();

@@ -28,16 +28,16 @@
 #include "definitions.h"
 #include "library/Fatfs/ff.h"
 #include "drivers/OLED/OLED.h"
-#include "drivers/ws2812b/ws2812b.h"
 #include "drivers/i2c/i2c_gpio.h"
 #include "drivers/key/key.h"
+#include "drivers/microSD/microSD.h"
 #include "application/music/music.h"
+#include "application/music/led.h"
 #include "application/screen/screen.h"
 #include "application/sdfile/sdfile.h"
 #include "application/pre_mode/pre_mode.h"
 #include "application/play_mode/play_mode.h"
 #include "application/game_mode/game_mode.h"
-#include "drivers/microSD/microSD.h"
 #include "main.h"
 
 MODE modeCtrl = init_mode;
@@ -55,7 +55,6 @@ int main(void)
     printf("Initialize finish!\n");
 
     main_init();
-
 
     while (true)
     {
@@ -87,7 +86,8 @@ void main_init()
     //drivers init
     sdFile_Init();
     Screen_Init();
-    WS2812B_Init();
+    LED_Init();
+    music_Init();
     //mode init
     modeCtrl = pre_mode;
 }

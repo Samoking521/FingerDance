@@ -1,27 +1,20 @@
 /*******************************************************************************
-  SYS CLK Static Functions for Clock System Service
+  Data Type definition of Timer PLIB
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    plib_clk.c
+    plib_tmr5.h
 
   Summary:
-    SYS CLK static function implementations for the Clock System Service.
+    Data Type definition of the Timer Peripheral Interface Plib.
 
   Description:
-    The Clock System Service provides a simple interface to manage the
-    oscillators on Microchip microcontrollers. This file defines the static
-    implementation for the Clock System Service.
+    This file defines the Data Types for the Timer Plib.
 
   Remarks:
-    Static functions incorporate all system clock configuration settings as
-    determined by the user via the Microchip Harmony Configurator GUI.
-    It provides static version of the routines, eliminating the need for an
-    object ID or object handle.
-
-    Static single-open interfaces also eliminate the need for the open handle.
+    None.
 
 *******************************************************************************/
 
@@ -48,73 +41,61 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 
-// *****************************************************************************
-// *****************************************************************************
-// Section: Include Files
-// *****************************************************************************
-// *****************************************************************************
+#ifndef PLIB_TMR5_H
+#define PLIB_TMR5_H
 
+#include <stddef.h>
+#include <stdint.h>
 #include "device.h"
-#include "plib_clk.h"
+#include "plib_tmr_common.h"
+
+// DOM-IGNORE-BEGIN
+#ifdef __cplusplus  // Provide C++ Compatibility
+
+    extern "C" {
+
+#endif
+// DOM-IGNORE-END
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: File Scope Functions
+// Section: Data Types
 // *****************************************************************************
 // *****************************************************************************
 
 // *****************************************************************************
-/* Function:
-    void CLK_Initialize( void )
-
-  Summary:
-    Initializes hardware and internal data structure of the System Clock.
-
-  Description:
-    This function initializes the hardware and internal data structure of System
-    Clock Service.
-
-  Remarks:
-    This is configuration values for the static version of the Clock System
-    Service module is determined by the user via the MHC GUI.
-
-    The objective is to eliminate the user's need to be knowledgeable in the
-    function of the 'configuration bits' to configure the system oscillators.
-*/
-
-void CLK_Initialize( void )
-{
-
-    /* Code for fuse settings can be found in "initialization.c" */
-    
-
-    /* unlock system for clock configuration */
-    SYSKEY = 0x00000000;
-    SYSKEY = 0xAA996655;
-    SYSKEY = 0x556699AA;
+// *****************************************************************************
+// Section: Interface Routines
+// *****************************************************************************
+// *****************************************************************************
 
 
-    /* Set up Reference Clock */
-    /* ROSEL =  SYSCLK */
-    /* RODIV = 1 */
-    REFOCON = 0x10000;
-    /* ROTRIM  = 395 */
-    REFOTRIM = 0xc5800000;
-    /* Enable Reference Oscillator (ON bit) */
-    REFOCONSET = 0x00008000;
+// *****************************************************************************
+void TMR5_Initialize(void);
 
+void TMR5_Start(void);
 
-    /* Lock system since done with clock configuration */
-    SYSKEY = 0x33333333;
+void TMR5_Stop(void);
 
-    /* Wait for PLL to be locked */
-    while(!OSCCONbits.SLOCK);
+void TMR5_PeriodSet(uint16_t);
 
-    /* Peripheral Module Disable Configuration */
-    PMD1 = 0x1101;
-    PMD2 = 0x7;
-    PMD3 = 0x1e001f;
-    PMD4 = 0x5;
-    PMD5 = 0x1020001;
-    PMD6 = 0x10001;
-}
+uint16_t TMR5_PeriodGet(void);
+
+uint16_t TMR5_CounterGet(void);
+
+uint32_t TMR5_FrequencyGet(void);
+
+void TMR5_InterruptEnable(void);
+
+void TMR5_InterruptDisable(void);
+
+void TMR5_CallbackRegister( TMR_CALLBACK callback_fn, uintptr_t context );
+
+// DOM-IGNORE-BEGIN
+#ifdef __cplusplus  // Provide C++ Compatibility
+
+    }
+#endif
+// DOM-IGNORE-END
+
+#endif /* PLIB_TMR5_H */

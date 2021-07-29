@@ -3,22 +3,18 @@
 #include "../../library/Fatfs/ff.h"
 #include "../../drivers/wm8978/wm8978.h"
 #include "drivers/i2s/i2s.h"
-#include "wav.h"
 #include <stdio.h>
 
 //#define MUSIC_DEBUG
-#define I2S_TX_DMA_BUFSIZE 8192
 
 AudioDevice audioDev;
-extern WavCtrl wavCtrl;
-static uint8_t i2sBuf[2][I2S_TX_DMA_BUFSIZE];
+static uint8_t i2sBuf[2][MUSIC_BUFSIZE];
 //volatile uint8_t wavWhichBuf = 0; //which buf is use now
 
 static void music_pre_play();
-
 static void music_tx_CallbackHandler(DMAC_TRANSFER_EVENT status, uintptr_t contextHandler);
 
-void music_init()
+void music_Init()
 {
     if (wm8978_Init())
     {
@@ -30,60 +26,44 @@ void music_init()
     I2S_Init();
 }
 
-uint8_t music_play(uint8_t* fname)
+uint8_t music_Play(uint8_t* fname)
 {
 #ifdef MUSIC_DEBUG
     printf("----music_play----\n");
 #endif
+    
     uint8_t res;
     FRESULT res_sd;
 
     audioDev.i2sBuf1 = i2sBuf[0];
     audioDev.i2sBuf2 = i2sBuf[1];
 
-    res = wav_DecodeInit(fname, &wavCtrl);
+    uint8_t wav_filename[25];
+    memcpy(wav_filename, fname, strlen((char *) fname) + 1);
+    int j = 0;
+    while (wav_filename[j] != '\0')
+        j++;
+    wav_filename[j] = '.';
+    wav_filename[j + 1] = 'w';
+    wav_filename[j + 2] = 'a';
+    wav_filename[j + 3] = 'v';
+    wav_filename[j + 4] = '\0';
+
+    res = wav_DecodeInit(wav_filename, &wavCtrl);
 
     if (res == 0)
     {
         music_pre_play();
 
-        res_sd = f_open(&audioDev.file, (TCHAR *) fname, FA_OPEN_EXISTING | FA_READ);
+        res_sd = f_open(&audioDev.file, (TCHAR *) wav_filename, FA_OPEN_EXISTING | FA_READ);
         if (res_sd == FR_OK)
         {
             f_lseek(&audioDev.file, wavCtrl.datastart); //jump to data block
             audioDev.wavWhichBuf = 0;
 
-            music_buffer_fill(i2sBuf[0], I2S_TX_DMA_BUFSIZE, wavCtrl.bps);
-            music_buffer_fill(i2sBuf[1], I2S_TX_DMA_BUFSIZE, wavCtrl.bps);
+            music_buffer_fill(i2sBuf[0], MUSIC_BUFSIZE, wavCtrl.bps);
+            music_buffer_fill(i2sBuf[1], MUSIC_BUFSIZE, wavCtrl.bps);
 
-            music_start();
-/*
-            while (1)
-            {
-                if (audioDev.wavWhichBuf == 1)
-                {
-#ifdef MUSIC_DEBUG
-                    printf("Buf2 start fill: %d\n", CORETIMER_CounterGet());
-#endif
-                    music_buffer_fill(i2sBuf[1], I2S_TX_DMA_BUFSIZE, wavCtrl.bps);
-#ifdef MUSIC_DEBUG
-                    printf("Buf2 end fill: %d\n", CORETIMER_CounterGet());
-#endif
-                    audioDev.wavWhichBuf = 0;
-                }
-                else if (audioDev.wavWhichBuf == 2)
-                {
-#ifdef MUSIC_DEBUG
-                    printf("Buf1 start fill: %d\n", CORETIMER_CounterGet());
-#endif
-                    music_buffer_fill(i2sBuf[0], I2S_TX_DMA_BUFSIZE, wavCtrl.bps);
-#ifdef MUSIC_DEBUG
-                    printf("Buf1 end fill: %d\n", CORETIMER_CounterGet());
-#endif
-                    audioDev.wavWhichBuf = 0;
-                }
-            }
-*/
         }
         else
             res = 0XFF;
@@ -98,7 +78,7 @@ uint8_t music_play(uint8_t* fname)
  * @param  None
  * @retval None
  */
-void music_start(void)
+void music_Start(void)
 {
     I2S_Start();
 }
@@ -108,7 +88,7 @@ void music_start(void)
  * @param  None
  * @retval None
  */
-void music_stop(void)
+void music_Stop(void)
 {
     I2S_Stop();
 }
@@ -121,7 +101,7 @@ void music_stop(void)
 void music_pre_play()
 {
     i2s_setup.i2sTransmitAddress = (uint8_t *) i2sBuf;
-    i2s_setup.i2sTransmitSize = 2 * I2S_TX_DMA_BUFSIZE;
+    i2s_setup.i2sTransmitSize = 2 * MUSIC_BUFSIZE;
     i2s_setup.i2sStandard = I2S_STANDARD_PHILLIPS;
 
     if (wavCtrl.bps == 16)

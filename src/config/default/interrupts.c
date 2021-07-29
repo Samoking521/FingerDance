@@ -65,6 +65,7 @@ void EXTERNAL_2_InterruptHandler( void );
 void EXTERNAL_3_InterruptHandler( void );
 void TIMER_4_InterruptHandler( void );
 void EXTERNAL_4_InterruptHandler( void );
+void TIMER_5_InterruptHandler( void );
 void I2C_1_InterruptHandler( void );
 void DMA_0_InterruptHandler( void );
 void DMA_1_InterruptHandler( void );
@@ -97,6 +98,11 @@ void __ISR(_EXTERNAL_4_VECTOR, ipl1SOFT) EXTERNAL_4_Handler (void)
     EXTERNAL_4_InterruptHandler();
 }
 
+void __ISR(_TIMER_5_VECTOR, ipl1SOFT) TIMER_5_Handler (void)
+{
+    TIMER_5_InterruptHandler();
+}
+
 void __ISR(_I2C_1_VECTOR, ipl1SOFT) I2C_1_Handler (void)
 {
     I2C_1_InterruptHandler();
@@ -107,7 +113,7 @@ void __ISR(_DMA_0_VECTOR, ipl1SOFT) DMA_0_Handler (void)
     DMA_0_InterruptHandler();
 }
 
-void __ISR(_DMA_1_VECTOR, ipl1SOFT) DMA_1_Handler (void)
+void __ISR(_DMA_1_VECTOR, ipl3SOFT) DMA_1_Handler (void)
 {
     DMA_1_InterruptHandler();
 }

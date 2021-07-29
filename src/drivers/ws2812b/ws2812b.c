@@ -19,16 +19,13 @@
 
 #define LED_NUM 40
 
-
-
 static uint16_t sendData[24 * LED_NUM + 40];
 static uint32_t colorBuf[41];
 int flag = 0;
 
-int fall_flag = 0;
+static bool _WS2812B_Lock = false;
 
 static void _WS2812B_DMA_CallbackHandler(DMAC_TRANSFER_EVENT status, uintptr_t contextHandler);
-static void _WS2812B_TIM4_CallbackHandler(uint32_t status, uintptr_t context);
 
 void WS2812B_Init(void)
 {
@@ -40,7 +37,6 @@ void WS2812B_Init(void)
     memset(colorBuf, 0, sizeof (colorBuf));
 
     DMAC_ChannelCallbackRegister(WS2812B_DMA_CHANNEL, _WS2812B_DMA_CallbackHandler, (uintptr_t) NULL);
-    TMR4_CallbackRegister(_WS2812B_TIM4_CallbackHandler, (uintptr_t) NULL);
 
     TMR2_Start();
     OCMP1_Enable();
@@ -106,11 +102,6 @@ void WS2812B_FallALine(LEDProperty *ledLine)
     int line = 8;
     for (; line >= 1; line--)
     {
-        /*
-        WS2812B_DataCopy(line + 1, line);
-        WS2812B_DataCopy(10 + line + 1, 10 + line);
-        WS2812B_DataCopy(20 + line + 1, 20 + line);
-        WS2812B_DataCopy(30 + line + 1, 30 + line);*/
         WS2812B_SetLED(line + 1, colorBuf[line]);
         WS2812B_SetLED(10 + line + 1, colorBuf[10 + line]);
         WS2812B_SetLED(20 + line + 1, colorBuf[20 + line]);
@@ -143,6 +134,22 @@ void WS2812B_SetJudgeLine(LEDProperty *ledLine)
     if (ledLine[3].index > 0)
         WS2812B_SetLED(40, ledLine[3].color);
     WS2812B_SendData();
+}
+
+bool WS2812B_Lock()
+{
+    if(_WS2812B_Lock == 1)
+        return true;
+    else
+    {
+        _WS2812B_Lock = 1;
+        return false;
+    }
+}
+
+void WS2812B_UnLock()
+{
+    _WS2812B_Lock = 0;
 }
 
 void WS2812B_Test()
@@ -203,11 +210,5 @@ void _WS2812B_DMA_CallbackHandler(DMAC_TRANSFER_EVENT status, uintptr_t contextH
     if (DMAC_TRANSFER_EVENT_COMPLETE == status)
     {
         flag = 1;
-
     }
-}
-
-void _WS2812B_TIM4_CallbackHandler(uint32_t status, uintptr_t context)
-{
-    fall_flag = 1;
 }

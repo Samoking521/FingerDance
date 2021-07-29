@@ -189,6 +189,8 @@ void SYS_Initialize ( void* data )
 
 	UART2_Initialize();
 
+    TMR5_Initialize();
+
     TMR2_Initialize();
 
     DMAC_Initialize();

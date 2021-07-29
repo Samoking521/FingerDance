@@ -31,6 +31,7 @@ typedef struct
 {
     uint8_t bpm;
     uint32_t ledDataLen;
+    uint32_t datastart;   //offset in file
 } MCCtrl;
 
 extern MCCtrl mcCtrl;

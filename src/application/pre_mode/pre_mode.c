@@ -111,7 +111,7 @@ void pre_main()
             if (key_game_start == 0)
             {
                 key_game_start = 1;
-                modeCtrl = game_mode;
+                modeCtrl = play_mode;
                 break;
             }
         }

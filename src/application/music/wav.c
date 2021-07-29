@@ -33,6 +33,8 @@ uint8_t wav_DecodeInit(uint8_t *fname, WavCtrl *wavx)
   ChunkFMT *fmt;
   ChunkFACT *fact;
   ChunkDATA *data;
+  
+  printf("%s\n", fname);
 
   res_sd = f_open(&audioDev.file, (TCHAR *)fname, FA_OPEN_EXISTING | FA_READ);
   if (res_sd == FR_OK)
