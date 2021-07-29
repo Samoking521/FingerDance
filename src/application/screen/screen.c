@@ -182,6 +182,48 @@ void Screen_LineUp(MusicInfo *musicInfo, int fileNum, int fileIndex)
     Screen_ShowFileList(musicInfo, (fileIndex - 1 + fileNum) % fileNum, (fileIndex + 4) % fileNum, fileNum);
 }
 
+void Screen_LoadPreDialog()
+{
+    //clear dialog area
+    for (int i = 2; i <= 5; i++)
+        OLED_FillArea(30, 98, i, 0x00);
+    //draw dialog border
+    uint8_t ch[128];
+    for (int i = 0; i < 66; i++)
+        ch[i] = 0x02;
+    ch[0] = 0xFE;
+    ch[65] = 0xFE;
+    OLED_Show(31, 16, ch, 66);
+    for (int i = 0; i < 66; i++)
+        ch[i] = 0x00;
+    ch[0] = 0xFF;
+    ch[65] = 0xFF;
+    OLED_Show(31, 24, ch, 66);
+    OLED_Show(31, 32, ch, 66);
+    for (int i = 0; i < 66; i++)
+        ch[i] = 0x40;
+    ch[0] = 0x7F;
+    ch[65] = 0x7F;
+    OLED_Show(31, 38, ch, 66);
+    //draw dialog test
+    uint8_t startline[] = {22, 32};
+    uint8_t * str[] = {
+        (uint8_t *) "play mode",
+        (uint8_t *) "game mode",
+    };
+    Screen_ShowStr(38, startline[0], str[0]);
+    Screen_ShowStr(38, startline[1], str[1]);
+}
+
+void Screen_ShowDlgCursor(uint8_t last, uint8_t cur)
+{
+    uint8_t startline[] = {22, 32};
+    uint8_t lastch[] = {0x00, 0x00};
+    OLED_Show(34, startline[last], lastch, 2);
+    uint8_t curch[] = {0x3C, 0x18};
+    OLED_Show(34, startline[cur], curch, 2);
+}
+
 void Screen_LoadPlayMode()
 {
     OLED_Fill(0x00);
@@ -193,10 +235,55 @@ void Screen_LoadPlayMode()
     for (int i = 0; i < 128; i++)
         ch[i] = 0x80;
     OLED_Show(0, 56, ch, 128);
-    
-    
+
+    Screen_ShowPlayText();
 }
 
+void Screen_ShowPlayText()
+{
+    uint8_t startline[] = {22, 34};
+    uint8_t * str[] = {
+        (uint8_t *) "name:",
+        (uint8_t *) "len:     /",
+    };
+    Screen_ShowStr(12, startline[0], str[0]);
+    Screen_ShowStr(18, startline[1], str[1]);
+}
+
+void Screen_ShowPlayMusicName(uint8_t *fname)
+{
+    Screen_ShowStr(46, 22, fname);
+}
+
+void Screen_ShowPlayMusicTotLen(uint8_t tol_min, uint8_t tol_sec)
+{
+    uint8_t strLen[5] = {0};
+    uint8_t m, n;
+    m = tol_sec / 10;
+    n = tol_sec % 10;
+    Screen_ShowStr(80, 34, strLen);
+    strLen[0] = '0' + tol_min;
+    strLen[1] = ':';
+    strLen[2] = '0' + m;
+    strLen[3] = '0' + n;
+    strLen[4] = '\0';
+    Screen_ShowStr(80, 34, strLen);
+}
+
+void Screen_ShowPlayMusicCurLen(uint8_t cur_min, uint8_t cur_sec)
+{
+    uint8_t strLen[5] = {0};
+    uint8_t m, n;
+    m = cur_sec / 10;
+    n = cur_sec % 10;
+    Screen_ShowStr(46, 34, strLen);
+    strLen[0] = '0' + cur_min;
+    strLen[1] = ':';
+    strLen[2] = '0' + m;
+    strLen[3] = '0' + n;
+    strLen[4] = '\0';
+    Screen_ShowStr(46, 34, strLen);
+}
 
 /**
  * @brief  show game mode background text
@@ -233,12 +320,12 @@ void Screen_ShowGameText()
     Screen_ShowStr(6, startline[3], str[3]);
 }
 
-void Screen_ShowMusicName(uint8_t *fname)
+void Screen_ShowGameMusicName(uint8_t *fname)
 {
     Screen_ShowStr(46, 10, fname);
 }
 
-void Screen_ShowMusicTotLen(uint8_t tol_min, uint8_t tol_sec)
+void Screen_ShowGameMusicTotLen(uint8_t tol_min, uint8_t tol_sec)
 {
     uint8_t strLen[5] = {0};
     uint8_t m, n;
@@ -253,7 +340,7 @@ void Screen_ShowMusicTotLen(uint8_t tol_min, uint8_t tol_sec)
     Screen_ShowStr(80, 22, strLen);
 }
 
-void Screen_ShowMusicCurLen(uint8_t cur_min, uint8_t cur_sec)
+void Screen_ShowGameMusicCurLen(uint8_t cur_min, uint8_t cur_sec)
 {
     uint8_t strLen[5] = {0};
     uint8_t m, n;
@@ -268,7 +355,7 @@ void Screen_ShowMusicCurLen(uint8_t cur_min, uint8_t cur_sec)
     Screen_ShowStr(46, 22, strLen);
 }
 
-void Screen_ShowMusicScore(uint32_t score)
+void Screen_ShowGameMusicScore(uint32_t score)
 {
     uint8_t m, n, p, q;
     m = score / 1000;
@@ -296,7 +383,7 @@ void Screen_ShowMusicScore(uint32_t score)
     Screen_ShowStr(58, 34, strLen);
 }
 
-void Screen_ShowMusicCombo(uint32_t combo)
+void Screen_ShowGameMusicCombo(uint32_t combo)
 {
     uint8_t m, n, p, q;
     m = combo / 1000;

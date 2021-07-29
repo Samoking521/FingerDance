@@ -161,11 +161,11 @@ void game_main()
 void game_screen()
 {
     Screen_LoadGameMode();
-    Screen_ShowMusicName(musicInfo[cursorCtrl.fileIndex].filename);
-    Screen_ShowMusicTotLen(musicInfo[cursorCtrl.fileIndex].len_min, musicInfo[cursorCtrl.fileIndex].len_sec);
-    Screen_ShowMusicCurLen(0, 0);
-    Screen_ShowMusicScore(0);
-    Screen_ShowMusicCombo(0);
+    Screen_ShowGameMusicName(musicInfo[cursorCtrl.fileIndex].filename);
+    Screen_ShowGameMusicTotLen(musicInfo[cursorCtrl.fileIndex].len_min, musicInfo[cursorCtrl.fileIndex].len_sec);
+    Screen_ShowGameMusicCurLen(0, 0);
+    Screen_ShowGameMusicScore(0);
+    Screen_ShowGameMusicCombo(0);
 }
 
 void game_key()

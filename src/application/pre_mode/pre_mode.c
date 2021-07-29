@@ -10,26 +10,29 @@
 MusicInfo musicInfo[10];
 int musicFileNum = 0;
 CursorCtrl cursorCtrl;
+ModeCursorCtrl modeCursorCtrl;
 
 uint8_t key_cursor_up = 0; //SW4
 uint8_t key_cursor_down = 0; //SW3
 uint8_t key_music_start = 0; //SW2
 uint8_t key_game_start = 0; //SW1
 
+uint8_t mode_select = 0;
+
 void pre_main()
 {
-    //sdFile_Init();
     sdFile_GetFileList(musicInfo, &musicFileNum);
     cursorCtrl.musicFileNum = musicFileNum;
     cursorCtrl.screenFileNum = musicFileNum > 6 ? 6 : musicFileNum;
     cursorCtrl.curIndex = 0;
     cursorCtrl.fileIndex = 0;
+    cursorCtrl.firstlineIndex = 0;
     sdFile_GetWAVFiles(musicInfo, musicFileNum);
     sdFile_GetMCFiles(musicInfo, musicFileNum);
+    /*
     for (int i = 0; i < musicFileNum; i++)
-        printf("%s:%d %d:%02d\n", musicInfo[i].filename, musicInfo[i].bpm, musicInfo[i].len_min, musicInfo[i].len_sec);
-
-    //Screen_Init();
+        printf("%s:%d %d:%02d\n", musicInfo[i].filename, musicInfo[i].bpm, musicInfo[i].len_min, musicInfo[i].len_sec);*/
+    mode_select = 0;
 
     pre_screen();
 
@@ -42,24 +45,34 @@ void pre_main()
             if (key_cursor_up == 0)
             {
                 key_cursor_up = 1;
-                //printf("up\n");
-                i = cursorCtrl.curIndex;
-                j = cursorCtrl.fileIndex;
-                if (i == 0)
+
+                if (mode_select == 0)
                 {
-                    Screen_ShowCursor(0, 0);
-                    Screen_LineUp(musicInfo, cursorCtrl.musicFileNum, j);
-                    j = (j - 1 + cursorCtrl.musicFileNum) % cursorCtrl.musicFileNum;
+                    i = cursorCtrl.curIndex;
+                    j = cursorCtrl.fileIndex;
+                    if (i == 0)
+                    {
+                        Screen_ShowCursor(0, 0);
+                        Screen_LineUp(musicInfo, cursorCtrl.musicFileNum, j);
+                        cursorCtrl.firstlineIndex = (cursorCtrl.fileIndex - 1 + cursorCtrl.musicFileNum) % cursorCtrl.musicFileNum;
+                        j = (j - 1 + cursorCtrl.musicFileNum) % cursorCtrl.musicFileNum;
+                    }
+                    else
+                    {
+                        Screen_ShowCursor(i % cursorCtrl.screenFileNum, (i - 1 + cursorCtrl.screenFileNum) % cursorCtrl.screenFileNum);
+                        i = (i - 1 + cursorCtrl.screenFileNum) % cursorCtrl.screenFileNum;
+                        j = (j - 1 + cursorCtrl.musicFileNum) % cursorCtrl.musicFileNum;
+                    }
+                    Screen_ShowMusicInfo(musicInfo[j].bpm, musicInfo[j].len_min, musicInfo[j].len_sec);
+                    cursorCtrl.curIndex = i;
+                    cursorCtrl.fileIndex = j;
                 }
                 else
                 {
-                    Screen_ShowCursor(i % cursorCtrl.screenFileNum, (i - 1 + cursorCtrl.screenFileNum) % cursorCtrl.screenFileNum);
-                    i = (i - 1 + cursorCtrl.screenFileNum) % cursorCtrl.screenFileNum;
-                    j = (j - 1 + cursorCtrl.musicFileNum) % cursorCtrl.musicFileNum;
+                    uint8_t tmp = modeCursorCtrl.curIndex;
+                    modeCursorCtrl.curIndex = !modeCursorCtrl.curIndex;
+                    Screen_ShowDlgCursor(tmp, modeCursorCtrl.curIndex);
                 }
-                Screen_ShowMusicInfo(musicInfo[j].bpm, musicInfo[j].len_min, musicInfo[j].len_sec);
-                cursorCtrl.curIndex = i;
-                cursorCtrl.fileIndex = j;
             }
         }
         else
@@ -71,24 +84,34 @@ void pre_main()
             if (key_cursor_down == 0)
             {
                 key_cursor_down = 1;
-                //printf("down\n");
-                i = cursorCtrl.curIndex;
-                j = cursorCtrl.fileIndex;
-                if (i == 5)
+
+                if (mode_select == 0)
                 {
-                    Screen_ShowCursor(5, 5);
-                    Screen_LineDown(musicInfo, cursorCtrl.musicFileNum, j);
-                    j = (j + 1) % cursorCtrl.musicFileNum;
+                    i = cursorCtrl.curIndex;
+                    j = cursorCtrl.fileIndex;
+                    if (i == 5)
+                    {
+                        Screen_ShowCursor(5, 5);
+                        Screen_LineDown(musicInfo, cursorCtrl.musicFileNum, j);
+                        cursorCtrl.firstlineIndex = (cursorCtrl.fileIndex - 4 + cursorCtrl.musicFileNum) % cursorCtrl.musicFileNum;
+                        j = (j + 1) % cursorCtrl.musicFileNum;
+                    }
+                    else
+                    {
+                        Screen_ShowCursor(i % cursorCtrl.screenFileNum, (i + 1) % cursorCtrl.screenFileNum);
+                        i = (i + 1) % cursorCtrl.screenFileNum;
+                        j = (j + 1) % cursorCtrl.musicFileNum;
+                    }
+                    Screen_ShowMusicInfo(musicInfo[j].bpm, musicInfo[j].len_min, musicInfo[j].len_sec);
+                    cursorCtrl.curIndex = i;
+                    cursorCtrl.fileIndex = j;
                 }
                 else
                 {
-                    Screen_ShowCursor(i % cursorCtrl.screenFileNum, (i + 1) % cursorCtrl.screenFileNum);
-                    i = (i + 1) % cursorCtrl.screenFileNum;
-                    j = (j + 1) % cursorCtrl.musicFileNum;
+                    uint8_t tmp = modeCursorCtrl.curIndex;
+                    modeCursorCtrl.curIndex = !modeCursorCtrl.curIndex;
+                    Screen_ShowDlgCursor(tmp, modeCursorCtrl.curIndex);
                 }
-                Screen_ShowMusicInfo(musicInfo[j].bpm, musicInfo[j].len_min, musicInfo[j].len_sec);
-                cursorCtrl.curIndex = i;
-                cursorCtrl.fileIndex = j;
             }
         }
         else
@@ -100,6 +123,13 @@ void pre_main()
             if (key_music_start == 0)
             {
                 key_music_start = 1;
+
+                if (mode_select == 1)
+                {
+                    mode_select = 0;
+
+                    pre_screen();
+                }
             }
         }
         else
@@ -111,8 +141,21 @@ void pre_main()
             if (key_game_start == 0)
             {
                 key_game_start = 1;
-                modeCtrl = play_mode;
-                break;
+
+                if (mode_select == 0)
+                {
+                    mode_select = 1;
+
+                    pre_dialog();
+                }
+                else
+                {
+                    if (modeCursorCtrl.curIndex == 0)
+                        modeCtrl = play_mode;
+                    else
+                        modeCtrl = game_mode;
+                    break;
+                }
             }
         }
         else
@@ -125,9 +168,16 @@ void pre_main()
 void pre_screen()
 {
     Screen_LoadPreMode();
-    Screen_ShowFileList(musicInfo, 0, cursorCtrl.screenFileNum - 1, musicFileNum);
-    Screen_ShowCursor(0, 0);
-    Screen_ShowMusicInfo(musicInfo[0].bpm, musicInfo[0].len_min, musicInfo[0].len_sec);
+    Screen_ShowFileList(musicInfo, cursorCtrl.firstlineIndex, (cursorCtrl.firstlineIndex + cursorCtrl.screenFileNum - 1) % cursorCtrl.musicFileNum, musicFileNum);
+    Screen_ShowCursor(cursorCtrl.curIndex, cursorCtrl.curIndex);
+    Screen_ShowMusicInfo(musicInfo[cursorCtrl.fileIndex].bpm, musicInfo[cursorCtrl.fileIndex].len_min, musicInfo[cursorCtrl.fileIndex].len_sec);
+}
+
+void pre_dialog()
+{
+    modeCursorCtrl.curIndex = 0;
+    Screen_LoadPreDialog();
+    Screen_ShowDlgCursor(modeCursorCtrl.curIndex, modeCursorCtrl.curIndex);
 }
 
 void pre_test()

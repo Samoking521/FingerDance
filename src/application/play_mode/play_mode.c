@@ -123,6 +123,9 @@ void play_main()
 void play_screen()
 {
     Screen_LoadPlayMode();
+    Screen_ShowPlayMusicName(musicInfo[cursorCtrl.fileIndex].filename);
+    Screen_ShowPlayMusicTotLen(musicInfo[cursorCtrl.fileIndex].len_min, musicInfo[cursorCtrl.fileIndex].len_sec);
+    Screen_ShowPlayMusicCurLen(0, 0);
 }
 
 void play_key()
