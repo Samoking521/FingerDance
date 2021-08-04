@@ -210,5 +210,6 @@ void _WS2812B_DMA_CallbackHandler(DMAC_TRANSFER_EVENT status, uintptr_t contextH
     if (DMAC_TRANSFER_EVENT_COMPLETE == status)
     {
         flag = 1;
+        WS2812B_UnLock();
     }
 }

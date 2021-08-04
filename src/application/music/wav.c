@@ -3,7 +3,7 @@
 #include "../../library/Fatfs/ff.h"
 #include <stdio.h>
 
-#define WAV_DEBUG
+//#define WAV_DEBUG
 
 #define WAV_I2S_TX_DMA_BUFSIZE 8192
 

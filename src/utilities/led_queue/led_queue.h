@@ -13,5 +13,7 @@ void LED_Queue_Init();
 bool LED_Queue_IsFull();
 void LED_Queue_Add(uint8_t *ledLine);
 LQNode* LED_Queue_GetFront();
+LQNode* LED_Queue_GetByIndex(int index);
+void LED_Queue_Debug();
 
 #endif

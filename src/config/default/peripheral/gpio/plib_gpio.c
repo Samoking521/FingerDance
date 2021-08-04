@@ -68,7 +68,7 @@ void GPIO_Initialize ( void )
 
     /* PORTC Initialization */
     LATC = 0x3; /* Initial Latch Value */
-    TRISCCLR = 0x3; /* Direction Control */
+    TRISCCLR = 0x203; /* Direction Control */
     ANSELCCLR = 0xf; /* Digital Mode Enable */
     CNPUCSET = 0x3c; /* Pull-Up Enable */
 
@@ -82,10 +82,6 @@ void GPIO_Initialize ( void )
     /* PPS Input Remapping */
     U2RXR = 3;
     SDI1R = 1;
-    INT2R = 5;
-    INT4R = 5;
-    INT1R = 5;
-    INT3R = 6;
 
     /* PPS Output Remapping */
     RPB10R = 2;

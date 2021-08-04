@@ -62,6 +62,15 @@
 // *****************************************************************************
 
 
+/*** Macros for K4DATA pin ***/
+#define K4DATA_Set()               (LATCSET = (1<<9))
+#define K4DATA_Clear()             (LATCCLR = (1<<9))
+#define K4DATA_Toggle()            (LATCINV= (1<<9))
+#define K4DATA_OutputEnable()      (TRISCCLR = (1<<9))
+#define K4DATA_InputEnable()       (TRISCSET = (1<<9))
+#define K4DATA_Get()               ((PORTC >> 9) & 0x1)
+#define K4DATA_PIN                  GPIO_PIN_RC9
+
 /*** Macros for I2C2_SDA pin ***/
 #define I2C2_SDA_Set()               (LATBSET = (1<<2))
 #define I2C2_SDA_Clear()             (LATBCLR = (1<<2))

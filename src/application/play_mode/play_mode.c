@@ -103,7 +103,7 @@ void play_main()
             while (WS2812B_Lock() == true)
                 ;
             WS2812B_FallALine(LEDLine);
-            WS2812B_UnLock();
+            //WS2812B_UnLock();
 
             if (play_Ctrl.beat_num == ledDev.beatNum + 10)
                 play_Ctrl.game_end = 1;
@@ -283,7 +283,7 @@ void play_key()
     if (WS2812B_Lock())
         return;
     WS2812B_SetJudgeLine(play_keyCtrl.judgeLine);
-    WS2812B_UnLock();
+    //WS2812B_UnLock();
 }
 
 void play_test()

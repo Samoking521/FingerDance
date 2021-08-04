@@ -1,4 +1,5 @@
 #include "led_queue.h"
+#include <stdio.h>
 
 #define LED_QUEUE_MAXSIZE 10
 
@@ -36,4 +37,19 @@ void LED_Queue_Add(uint8_t *ledLine)
 LQNode* LED_Queue_GetFront()
 {
     return &LED_Queue[(front + 1) % LED_QUEUE_MAXSIZE];
+}
+
+LQNode* LED_Queue_GetByIndex(int index)
+{
+    return &LED_Queue[(front + index) % LED_QUEUE_MAXSIZE];
+}
+
+void LED_Queue_Debug()
+{
+    int start = front;
+    while (start != rear)
+    {
+        start = (start + 1) % LED_QUEUE_MAXSIZE;
+        printf("queue index %d: %d\n", start, LED_Queue[start].data[0]);
+    }
 }
