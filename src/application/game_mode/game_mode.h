@@ -15,11 +15,14 @@ typedef struct
     uint8_t redHold[4];
     uint8_t judgeHold[4];
     uint8_t greenHold[4];
+    
+    uint32_t holdBeat[4];
 }GAME_MODE_KEYCTRL;
 
 typedef struct {
     uint8_t game_end;
     uint8_t len_flag;
+    uint8_t score_flag;
     uint32_t beat_num;
     uint32_t score;
     uint32_t combo;

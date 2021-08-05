@@ -8,6 +8,7 @@ typedef struct
 {
     uint32_t tick;
     uint8_t data[4];
+    uint8_t judge[4];
 }AQNode;
 
 void ANS_Queue_Init();

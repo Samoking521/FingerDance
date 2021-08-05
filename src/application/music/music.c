@@ -85,6 +85,7 @@ uint8_t music_Play(uint8_t* fname)
 void music_Start(void)
 {
     I2S_Start();
+    printf("music start: %u\n", CORETIMER_CounterGet());
 }
 
 /**

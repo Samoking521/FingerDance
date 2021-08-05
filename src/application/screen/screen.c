@@ -374,11 +374,11 @@ void Screen_ShowGameMusicScore(uint32_t score)
         strLen[1] = ' ';
     else
         strLen[1] = '0' + n;
-    if (q == 0)
+    if (p == 0)
         strLen[2] = ' ';
     else
-        strLen[2] = '0' + q;
-    strLen[3] = '0' + p;
+        strLen[2] = '0' + p;
+    strLen[3] = '0' + q;
     strLen[4] = '\0';
     Screen_ShowStr(58, 34, strLen);
 }

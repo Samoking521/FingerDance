@@ -103,6 +103,7 @@ void play_main()
             while (WS2812B_Lock() == true)
                 ;
             WS2812B_FallALine(LEDLine);
+            printf("led tick: %u\n", CORETIMER_CounterGet());
             //WS2812B_UnLock();
 
             if (play_Ctrl.beat_num == ledDev.beatNum + 10)
