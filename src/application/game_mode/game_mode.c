@@ -37,15 +37,15 @@ static void _GAMESHOW_TIM3_CallbackHandler(uint32_t status, uintptr_t context);
 void game_init()
 {
     LED_Queue_Init();
-    memset(&game_keyCtrl, 0, sizeof (game_keyCtrl));
+    memset(&game_keyCtrl, 0, sizeof(game_keyCtrl));
 
     key_Init();
     key_CallbackRegister(game_key);
 
-    TMR3_CallbackRegister(_GAMESHOW_TIM3_CallbackHandler, (uintptr_t) NULL);
+    TMR3_CallbackRegister(_GAMESHOW_TIM3_CallbackHandler, (uintptr_t)NULL);
 
-    memset(&game_keyCtrl, 0, sizeof (game_keyCtrl));
-    memset(&game_Ctrl, 0, sizeof (game_Ctrl));
+    memset(&game_keyCtrl, 0, sizeof(game_keyCtrl));
+    memset(&game_Ctrl, 0, sizeof(game_Ctrl));
 
     game_screen();
 }
@@ -59,7 +59,7 @@ void game_main()
 
     LEDProperty LEDLine[4] = {0};
     int start_adjust = 12;
-    
+
     AQNode judgeLine;
     game_Ctrl.beat_num = 0;
 
@@ -106,8 +106,8 @@ void game_main()
                 music_Start();
                 start_adjust = -1;
             }
-            
-            memset(LEDLine, 0, sizeof (LEDLine));
+
+            memset(LEDLine, 0, sizeof(LEDLine));
             uint32_t k = (game_Ctrl.beat_num % 512) * 4;
             if (game_Ctrl.beat_num < ledDev.beatNum)
             {
@@ -138,7 +138,7 @@ void game_main()
 
             if (ANS_Queue_IsFull())
             {
-                AQNode* prenode = ANS_Queue_GetPre();
+                AQNode *prenode = ANS_Queue_GetPre();
                 for (int i = 0; i < 4; i++)
                 {
                     if (prenode->judge[i] == 1)
@@ -151,7 +151,7 @@ void game_main()
 
             if (LED_Queue_IsFull())
             {
-                LQNode* lqnode = LED_Queue_GetFront();
+                LQNode *lqnode = LED_Queue_GetFront();
                 judgeLine.tick = ledDev.ledTick;
                 for (int i = 0; i < 4; i++)
                 {
@@ -178,9 +178,8 @@ void game_main()
             if (game_Ctrl.beat_num == ledDev.beatNum + 10)
                 game_Ctrl.game_end = 1;
 
-
 #ifdef GAME_MODE_DEBUG
-            //printf("led tick: %u\n", CORETIMER_CounterGet());
+                //printf("led tick: %u\n", CORETIMER_CounterGet());
 #endif
 
             game_Ctrl.beat_num += 1;
@@ -235,10 +234,10 @@ void game_key()
 
     if (!ANS_Queue_IsFull())
         return;
-    AQNode* prenode = ANS_Queue_GetPre();
-    AQNode* curnode = ANS_Queue_GetCur();
+    AQNode *prenode = ANS_Queue_GetPre();
+    AQNode *curnode = ANS_Queue_GetCur();
 
-    memset(game_keyCtrl.judgeLine, 0, sizeof (game_keyCtrl.judgeLine));
+    memset(game_keyCtrl.judgeLine, 0, sizeof(game_keyCtrl.judgeLine));
 
     if (keyCtrl.key4 == 1)
     {
@@ -251,47 +250,6 @@ void game_key()
         }
 
 #endif
-        /*
-        if (game_keyCtrl.judgeHold[0] == 1)
-        {
-            game_keyCtrl.judgeLine[0].index = 10;
-            game_keyCtrl.judgeLine[0].color = JUDGE;
-        }
-        else if (game_keyCtrl.greenHold[0] > 0)
-        {
-            game_keyCtrl.greenHold[0] -= 1;
-
-            game_keyCtrl.judgeLine[0].index = 10;
-            game_keyCtrl.judgeLine[0].color = GREEN;
-        }
-        else if (lqnode->data[0] == 2)
-        {
-            game_keyCtrl.judgeLine[0].index = 10;
-            game_keyCtrl.judgeLine[0].color = GREEN;
-        }
-        else if (lqnode->data[0] == 1)
-        {
-            if (low_tick <= key_tick && key_tick <= high_tick && game_keyCtrl.key_col_1 == 0)
-            {
-                game_keyCtrl.greenHold[0] = 12;
-
-                game_keyCtrl.judgeLine[0].index = 10;
-                game_keyCtrl.judgeLine[0].color = GREEN;
-            }
-            else
-            {
-                game_keyCtrl.judgeLine[0].index = 10;
-                game_keyCtrl.judgeLine[0].color = JUDGE;
-            }
-        }
-        else
-        {
-            game_keyCtrl.judgeHold[0] = 1;
-
-            game_keyCtrl.judgeLine[0].index = 10;
-            game_keyCtrl.judgeLine[0].color = JUDGE;
-        }*/
-
         if (game_keyCtrl.greenHold[0] > 0)
         {
             game_keyCtrl.greenHold[0] -= 1;
@@ -328,14 +286,6 @@ void game_key()
 
             game_keyCtrl.judgeLine[0].index = 10;
             game_keyCtrl.judgeLine[0].color = GREEN;
-            /*
-            if (game_keyCtrl.holdBeat[0] == game_Ctrl.beat_num)
-            {
-                game_keyCtrl.holdBeat[0] = game_Ctrl.beat_num;
-                prenode->judge[0] = 1;
-            }
-            else if(game_keyCtrl)*/
-
         }
         else
         {
@@ -344,44 +294,13 @@ void game_key()
         }
 
         game_keyCtrl.key_col_1 = 1;
-
     }
     else
     {
         if (game_keyCtrl.key_col_1 == 1)
         {
             game_keyCtrl.key_col_1 = 0;
-
         }
-        /*
-        game_keyCtrl.judgeHold[0] = 0;
-
-        if (game_keyCtrl.redHold[0] > 0)
-        {
-            game_keyCtrl.redHold[0] -= 1;
-
-            game_keyCtrl.judgeLine[0].index = 10;
-            game_keyCtrl.judgeLine[0].color = RED;
-        }
-        else if (game_keyCtrl.greenHold[0] > 0)
-        {
-            game_keyCtrl.greenHold[0] -= 1;
-
-            game_keyCtrl.judgeLine[0].index = 10;
-            game_keyCtrl.judgeLine[0].color = GREEN;
-        }
-        else if (lqnode->data[0] > 0)
-        {
-            game_keyCtrl.judgeLine[0].index = 10;
-            game_keyCtrl.judgeLine[0].color = RED;
-
-            game_keyCtrl.redHold[0] = 8; // red conitnue 80ms
-        }
-        else
-        {
-            game_keyCtrl.judgeLine[0].index = 10;
-            game_keyCtrl.judgeLine[0].color = JUDGE;
-        }*/
 
         if (game_keyCtrl.greenHold[0] > 0)
         {
@@ -399,43 +318,6 @@ void game_key()
 
     if (keyCtrl.key3 == 1)
     {
-        //printf("key3: 1\n");
-        /*
-        if (game_keyCtrl.greenHold[1] > 0)
-        {
-            game_keyCtrl.greenHold[1] -= 1;
-
-            game_keyCtrl.judgeLine[1].index = 20;
-            game_keyCtrl.judgeLine[1].color = GREEN;
-        }
-        else if (lqnode->data[1] == 1)
-        {
-            if (low_tick <= key_tick && key_tick <= high_tick && game_keyCtrl.key_col_2 == 0)
-            {
-                game_keyCtrl.greenHold[1] = 10;
-
-                game_keyCtrl.judgeLine[1].index = 20;
-                game_keyCtrl.judgeLine[1].color = GREEN;
-            }
-            else
-            {
-                game_keyCtrl.judgeLine[1].index = 20;
-                game_keyCtrl.judgeLine[1].color = JUDGE;
-            }
-        }
-        else if (lqnode->data[1] == 2)
-        {
-            game_keyCtrl.greenHold[1] = 10;
-
-            game_keyCtrl.judgeLine[1].index = 20;
-            game_keyCtrl.judgeLine[1].color = GREEN;
-        }
-        else
-        {
-            game_keyCtrl.judgeLine[1].index = 20;
-            game_keyCtrl.judgeLine[1].color = JUDGE;
-        }*/
-
         if (game_keyCtrl.greenHold[1] > 0)
         {
             game_keyCtrl.greenHold[1] -= 1;
@@ -450,7 +332,6 @@ void game_key()
             game_keyCtrl.judgeLine[1].index = 20;
             game_keyCtrl.judgeLine[1].color = GREEN;
             curnode->judge[1] = 1;
-        
         }
         else if (prenode->data[1] == 1 && game_keyCtrl.key_col_2 == 0)
         {
@@ -505,34 +386,6 @@ void game_key()
             game_keyCtrl.judgeLine[2].index = 30;
             game_keyCtrl.judgeLine[2].color = GREEN;
         }
-        /*
-        else if (lqnode->data[2] == 1)
-        {
-            if (low_tick <= key_tick && key_tick <= high_tick && game_keyCtrl.key_col_3 == 0)
-            {
-                game_keyCtrl.greenHold[2] = 10;
-
-                game_keyCtrl.judgeLine[2].index = 30;
-                game_keyCtrl.judgeLine[2].color = GREEN;
-            }
-            else
-            {
-                game_keyCtrl.judgeLine[2].index = 30;
-                game_keyCtrl.judgeLine[2].color = JUDGE;
-            }
-        }
-        else if (lqnode->data[2] == 2)
-        {
-            game_keyCtrl.greenHold[2] = 10;
-
-            game_keyCtrl.judgeLine[2].index = 30;
-            game_keyCtrl.judgeLine[2].color = GREEN;
-        }
-        else
-        {
-            game_keyCtrl.judgeLine[2].index = 30;
-            game_keyCtrl.judgeLine[2].color = JUDGE;
-        }*/
 
         if (game_keyCtrl.greenHold[2] > 0)
         {

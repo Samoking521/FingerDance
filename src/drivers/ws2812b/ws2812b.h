@@ -22,11 +22,8 @@
 #define FUCHSIA 0x00FFFF
 #define AQUA 0xFF00FF
 
-//#define NOTE 0x431560
 #define NOTE 0x03050F
-//#define HOLD 0x5CCD5C
-#define HOLD  0x030A0A
-//#define JUDGE 0x234A5A
+#define HOLD 0x030A0A
 #define JUDGE 0x0C0D0C
 
 typedef struct

@@ -14,7 +14,6 @@ void OLED_Show(uint8_t x, uint8_t y, uint8_t ch[], uint8_t len);
 void OLED_ShowStr(uint8_t x, uint8_t y, uint8_t ch[], uint8_t TextSize);
 void OLED_ShowStrEx(uint8_t x, uint8_t y, uint8_t ch[]);
 void OLED_ShowCN(uint8_t x, uint8_t y, uint8_t N);
-void OLED_DrawBMP(uint8_t x0, uint8_t y0, uint8_t x1, uint8_t y1, uint8_t BMP[]);
 void OLED_Test();
 void OLED_DebugBuf();
 void OLED_DebugPage(int page);
