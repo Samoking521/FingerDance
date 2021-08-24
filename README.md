@@ -1,4 +1,41 @@
-# 目录结构说明
+# FingerDance
+
+## Description
+
+本项目是一个在嵌入式平台上完成的音乐游戏机。游戏机以Microchip的PIC32MX270F256D单片机为核心，并由LED灯带(WS2812B)，音响，OLED，MicroSD，机械按键等外设组成。游戏时灯带上的LED随着音乐的节奏流动，玩家需要在LED流动到指定位置时按下对应的按键，游戏以按键时机的准确度作为游戏的评价指标。
+
+## Used
+
+- Peripheral Modules
+    - OC
+    - Timer
+    - I2C
+    - I2S
+    - SPI
+    - DMA
+    - Core Timer
+- Hardware
+    - PIC32MX270F256D
+    - WM8978
+    - WS2812B
+    - 1.3inch OLED
+    - MicroSD
+    - Key
+    - Audio with 3.5mm interface
+- Software
+    - MPLAB X IDE
+    - MPLAB XC32 Compiler
+    - MPLAB Harmony v3
+
+## Demonstrate
+
+<image src="images/image.png">
+
+## Comments
+
+详细设计文档参考[DesignReport](DesignReport.md)
+
+## Contents
 
 ```
 doc # 项目文档
@@ -6,8 +43,6 @@ doc # 项目文档
 ├───MUSIC
 ├───OLED
 └───WS2812B
-sd_files # sd卡存放文件
-└───music
 src # 项目源码
 ├───application # 程序应用
 │   ├───game_mode
@@ -49,6 +84,7 @@ src # 项目源码
 ├───library # 第三方库
 │   └───Fatfs
 └───utilities # 工具
+    ├───ans_queue
     ├───crc
     └───led_queue
 ```
